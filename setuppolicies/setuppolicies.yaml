@@ -91,6 +91,8 @@ spec:
     path: community
     repoURL: https://github.com/stolostron/policy-collection
     targetRevision: HEAD
+    directory:
+      recurse: true # <--- Here    
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
