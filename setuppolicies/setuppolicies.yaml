@@ -1,0 +1,118 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: policies
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-gitops-operator  
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: openshift-gitops-group
+  namespace: openshift-gitops-operator
+spec:
+  targetNamespaces: []
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: openshift-gitops-operator
+  namespace: openshift-gitops-operator
+spec:
+  channel: "stable"
+  installPlanApproval: Automatic
+  name: openshift-gitops-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  config:
+    env:
+      - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+        value: 'openshift-gitops, policies'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: policies
+  namespace: policies
+spec:
+  repo:
+    env:
+    - name: KUSTOMIZE_PLUGIN_HOME
+      value: /etc/kustomize/plugin
+    initContainers:
+    - args:
+      - cp /etc/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/PolicyGenerator
+        /policy-generator/PolicyGenerator
+      command:
+      - sh
+      - -c
+      image: registry.redhat.io/rhacm2/multicluster-operators-subscription-rhel8:v2.6
+      name: policy-generator-install
+      volumeMounts:
+      - mountPath: /policy-generator
+        name: policy-generator
+    volumeMounts:
+    - mountPath: /etc/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator
+      name: policy-generator
+    volumes:
+    - emptyDir: {}
+      name: policy-generator
+  kustomizeBuildOptions: --enable-alpha-plugins
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cluster-manager-admin-to-argocd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: openshift-gitops-argocd-application-controller
+  namespace: policies
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: policies
+  namespace: policies
+spec:
+  destination:
+    namespace: policies
+    server: https://kubernetes.default.svc
+  project: policies
+  source:
+    path: community
+    repoURL: https://github.com/stolostron/policy-collection
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true        
+
+---    
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: policies
+  namespace: policies
+  # Finalizer that ensures that project is not deleted until it is not referenced by any application
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  sourceRepos:
+  - '*'
+  destinations:
+  - namespace: '*'
+    server: '*'
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
