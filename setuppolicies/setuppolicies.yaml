@@ -133,7 +133,7 @@ spec:
     server: https://kubernetes.default.svc
   project: policies
   source:
-    path: policygenerator/policy-sets/community/openshift-hardening
+    path: policygenerator/policy-sets/stable/acm-hardening
     repoURL: https://github.com/ch-stark/policy-collection
     targetRevision: HEAD
     directory:
