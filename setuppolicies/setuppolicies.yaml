@@ -39,7 +39,56 @@ metadata:
   name: policies
   namespace: policies
 spec:
+  server:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 125m
+        memory: 128Mi
+    route:
+      enabled: true
+  applicationSet:
+    resources:
+      limits:
+        cpu: '2'
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+  dex:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+  redis:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+  controller:
+    resources:
+      limits:
+        cpu: '2'
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 1Gi
   repo:
+    resources:
+      limits:
+        cpu: '1'
+        memory: 512Mi
+      requests:
+        cpu: 250m
+        memory: 256Mi
     env:
     - name: KUSTOMIZE_PLUGIN_HOME
       value: /etc/kustomize/plugin
