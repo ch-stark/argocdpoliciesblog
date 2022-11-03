@@ -122,6 +122,65 @@ subjects:
   name: policies-argocd-application-controller
   namespace: policies
 ---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: openshift-gitops-policy-admin
+rules:
+  - verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+    apiGroups:
+      - policy.open-cluster-management.io
+    resources:
+      - policies
+      - placementbindings
+  - verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+    apiGroups:
+      - apps.open-cluster-management.io
+    resources:
+      - placementrules
+  - verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+    apiGroups:
+      - cluster.open-cluster-management.io
+    resources:
+      - placements
+      - placements/status
+      - placementdecisions
+      - placementdecisions/status
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: openshift-gitops-policy-admin
+subjects:
+- kind: ServiceAccount
+  name: policies-argocd-application-controller
+  namespace: policies
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: openshift-gitops-policy-admin
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
