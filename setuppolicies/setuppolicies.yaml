@@ -49,14 +49,6 @@ spec:
         memory: 128Mi
     route:
       enabled: true
-  applicationSet:
-    resources:
-      limits:
-        cpu: '2'
-        memory: 1Gi
-      requests:
-        cpu: 250m
-        memory: 512Mi
   repo:
     resources:
       limits:
