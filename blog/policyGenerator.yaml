@@ -22,7 +22,7 @@ policies:
   disabled: false
   manifests:
     - path: input
-  remediationAction: "inform"
+  remediationAction: "enforce"
 policySets:
   - name: config-test
     description: Configuration-Examples
