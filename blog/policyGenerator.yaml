@@ -25,7 +25,6 @@ policies:
   remediationAction: "inform"
 policySets:
   - name: config-test
-    description: Apply standard best practices for hardening your Red Hat Advanced
-      Cluster Management for Kubernetes installation.
+    description: Configuration-Examples
     placement:
       placementPath: config-test-placement.yaml
