@@ -1,3 +1,16 @@
+ArgoCD
+
+* Cluster and application configuration versioned in Git
+* Automatically syncs configuration from Git to clusters
+* Drift detection, visualization and correction
+* Granular control over sync order for complex rollouts
+* Rollback and rollforward to any Git commit
+* Manifest templating support (Helm, Kustomize, etc)
+* Visual insight into sync status and history
+
+
+
+
 * by deploying Policies (together with its Placementinfo) and using a simple ArgoCD-App (deployed on the Hub) you can bootstrap and consistently configure a whole fleet of Clusters
 advanced Templating features optimized for Multi-Cluster-Management which includes Secrets-Management)
 * option to generate resources (e.g Roles, Rolebindings) in one or several namespaces based on namespace names, labels or complex expressions
