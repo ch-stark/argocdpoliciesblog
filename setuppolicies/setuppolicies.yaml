@@ -157,8 +157,6 @@ spec:
     path: policygenerator/policy-sets/stable/acm-hardening
     repoURL: https://github.com/ch-stark/policy-collection
     targetRevision: HEAD
-    directory:
-      recurse: true # <--- Here    
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
@@ -180,6 +178,8 @@ spec:
     path: stable
     repoURL: https://github.com/ch-stark/policy-collection
     targetRevision: HEAD
+    directory:
+      recurse: true # <--- Here 
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
