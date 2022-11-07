@@ -216,13 +216,36 @@ spec:
     path: policygenerator/policy-sets/stable/acm-hardening
     repoURL: https://github.com/ch-stark/policy-collection
     targetRevision: HEAD
+    directory:
+      recurse: true # <--- Here    
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
     automated:
       selfHeal: false
       prune: true        
----    
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: policies3
+  namespace: policies
+spec:
+  destination:
+    namespace: policies
+    server: https://kubernetes.default.svc
+  project: policies
+  source:
+    path: stable
+    repoURL: https://github.com/ch-stark/policy-collection
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      selfHeal: false
+      prune: true     
+---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
