@@ -9,7 +9,10 @@ ArgoCD
 * Visual insight into sync status and history
 
 
+Advantages
 
+* RHACM can be use to install/configure ArgoCD consistently either on the Hub or on Managed-Clusters
+* You can enforce and monitor the settings of ArgoCD.
 
 * by deploying Policies (together with its Placementinfo) and using a simple ArgoCD-App (deployed on the Hub) you can bootstrap and consistently configure a whole fleet of Clusters
 advanced Templating features optimized for Multi-Cluster-Management which includes Secrets-Management)
