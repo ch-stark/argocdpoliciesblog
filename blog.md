@@ -30,7 +30,7 @@ Deploying Policies with ArgoCD is easy. In the following we will list the advant
 
 * There is the option to generate resources (e.g Roles, Rolebindings) in one or several namespaces based on namespace `names`, `labels` or `expressions`.
 
-In ACM 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and `expression`:
+  In ACM 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and `expression`:
 
 ```
           namespaceSelector:
