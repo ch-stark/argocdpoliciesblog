@@ -1,4 +1,4 @@
-## ArgoCd and Red Hat Advanced Cluster Management-Policies: Better together
+## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
 
 Sometimes we are getting asked about the relationship between Gitops-Operator/ArgoCD and Red Hat Advanced Cluster Management (RHACM)-Policies and if they can fit together.
 Deploying Policies with ArgoCD is easy. In the following we will list the advantages of the integration showing some examples.
@@ -8,11 +8,11 @@ Deploying Policies with ArgoCD is easy. In the following we will list the advant
 * RHACM can be used to install/configure Gitops-Operator/ArgoCD consistently either on the Hub or on Managed-Clusters.
   Using the App-of-Apps pattern you can e.g. have a root Gitops-Operator/ArgoCD -Application which deploys other Applications from them one or more can have the purpose to deploy Policies. 
 
-* It offers you the option to enforce and monitor the settings of ArgoCD regardless if you have a centralized or decentralized approach. This means you can consistently rollout Gitops-Operator/Argocd to your fleet of clusters avoiding any issues which come from inconsistencies e.g. regarding RBAC which are else difficult to see.
+* It offers you the option to enforce and monitor the settings of ArgoCD regardless if you have a centralized or decentralized approach. This means you can consistently rollout Gitops-Operator/Argocd to your fleet of clusters avoiding any issues which come from inconsistencies e.g. regarding RBAC and which are else difficult to see and to troubleshoot.
 
 * by deploying Policies (together with its Placementinfo) and using a simple ArgoCD-App (deployed on the Hub) you can bootstrap and consistently configure a whole fleet of Clusters
 
-* You get advanced Templating features optimized for Multi-Cluster-Management which includes Secrets-Management where you can securely copy a secret from the Hub to a ManagedCluster.
+* You get advanced Templating features optimized for Multi-Cluster-Management which includes `Secrets-Management` where you can securely copy a secret from the Hub to a ManagedCluster.
 
 ```
           object-templates:
@@ -44,7 +44,6 @@ In ACM 2.6 - as you see below - we enhanced our `namespaceSelector` to chose nam
 
 * You have the capability to patch resources. This means if a Kubernetes-Object must contain certain values you specify `musthave` in case you can tolerate other fields.
   Else - if the object must match exactly - you can specify `mustonlyhave`.
-
 
 * We provide the option to just monitor resources instead of creating/patching them (inform, versus enforce). It is possible to monitor the status of any Kubernetes-Object.
   In this case we check for namespaces in `terminating` status leading to a violation.
@@ -107,14 +106,15 @@ The above feature has mainly the advantage to tune environments with many polici
 * You can use PolicyGenerator which also can be used for integration of Kyverno and Gatekeeper 
 
   In the following example we create a Policy for creating an ArgoCD-Notification config map using PolicyGenerator
-
+  As the config map already contains templating-expression we disable RHACM-Templating for this Policy in the PolicyGenerator  
+  file.
 
 * Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every Single Policy
 
 * Option to have less/or more fine grained checks by using Configuration-Policies
 
-  This means you can create one ConfigurationPolicy for every single Kubernetes-Object or bundle many of them. Each Configuration Policy will be 
-  one unit when it comes to check the status in the UI. 
+  This means you can create one ConfigurationPolicy for every single Kubernetes-Object or bundle many of them. Each 
+  Configuration Policy will be one unit when it comes to check the status in the UI. 
 
 * Monitoring- and Ansible-integration (gives you the option to implement Automated Governance)
 
@@ -141,12 +141,10 @@ The above feature has mainly the advantage to tune environments with many polici
           minimumDuration: 100h
 ```
 
-
 ### Running the example
 
 All you need to do is executing this [example](https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/setuppolicies.yaml), execute
 it 2 times with some interval of ca 30 sec as GitopsOperator might need to be installed first.
-
 
 ArgoCD in `policies namespace` is configured to setup PolicyGenerator
 
