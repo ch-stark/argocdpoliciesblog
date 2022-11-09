@@ -94,8 +94,8 @@ Deploying Policies with ArgoCD is easy. In the following we will list the advant
         compliant: 10m
         noncompliant: 10s
 ```
+  This example 
 
-This example 
 ```
       spec.evaluationInterval.compliant: never
 ```
@@ -183,11 +183,11 @@ ArgoCD in `policies namespace` is configured to setup PolicyGenerator
 
 We deploy three Applications with only slighty different purpososes:
 
-- Application 1 deploys a `Stable` (means supported)-PolicySet in order to harden RHACM. PolicyGenerator is used.
-- Application 2 deploys a custom PolicySet e.g. for Configuration-Purposes. It contains one policy and is designed to be   
+- `Application 1` deploys a `Stable` (means supported)-PolicySet in order to harden RHACM. PolicyGenerator is used.
+- `Application 2` deploys a custom PolicySet e.g. for Configuration-Purposes. It contains one policy and is designed to be   
   extended. PolicyGenerator is used also here.
-- With Application 3 we are deploying supported Policies from our PolicyCollection repository. As we need to apply them from
-  Subdirectories the following property `recurse: true` has to be present (unlike in the first two Applications):
+- With `Application 3` we are deploying supported Policies from our `PolicyCollection` repository. As we need to apply them
+  from `subdirectories` the following property `recurse: true` has to be present (unlike in the first two Applications):
 
 ```
       source:
