@@ -22,6 +22,20 @@ advanced Templating features optimized for Multi-Cluster-Management which includ
 * option to delete certain objects (delete implemented via mustnothave)
 * option to group objects to certain sets (PolicySets), this feature has both UI/Gitops-Support
 * possibility to configure how often checks should be evaluated considering the current status of an evaluated Object
+
+https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html-single/governance/index#policy-overview    
+```
+  spec:
+    evaluationInterval:
+    compliant: 10m
+    noncompliant: 10s
+```
+```
+spec.evaluationInterval.compliant: never
+```
+Stops evaluating the policy once it is in compliant state. So only enforces it once.
+
+
 integration with Kyverno/Gatekeeper (implemented using PolicyGenerator but also UI-support)
 * Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every Single Policy
 * Option to have less/or more fine grained checks by using Configuration-Policies
