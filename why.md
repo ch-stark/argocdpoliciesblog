@@ -1,43 +1,208 @@
-ArgoCD
+## ArgoCd and Red Hat Advanced Cluster Management-Policies: Better together
 
-* Cluster and application configuration versioned in Git
-* Automatically syncs configuration from Git to clusters
-* Drift detection, visualization and correction
-* Granular control over sync order for complex rollouts
-* Rollback and rollforward to any Git commit
-* Manifest templating support (Helm, Kustomize, etc)
-* Visual insight into sync status and history
+Sometimes we are getting asked about the relationship between Gitops-Operator/ArgoCD and Red Hat Advanced Cluster Management (RHACM)-Policies and if they can fit together.
+Deploying Policies with ArgoCD is easy. In the following we will list the advantages of the integration showing some examples.
 
+## Advantages of using RHACM with ArgoCD
 
-Advantages
+* RHACM can be used to install/configure Gitops-Operator/ArgoCD consistently either on the Hub or on Managed-Clusters.
+  Using the App-of-Apps pattern you can e.g. have a root Gitops-Operator/ArgoCD -Application which deploys other Applications from them one or more can have the purpose to deploy Policies. 
 
-* RHACM can be use to install/configure ArgoCD consistently either on the Hub or on Managed-Clusters
-* You can enforce and monitor the settings of ArgoCD.
+* It offers you the option to enforce and monitor the settings of ArgoCD regardless if you have a centralized or decentralized approach.
+  This means you can consistently rollout Gitops-Operator/Argocd to your fleet of clusters avoiding any issues which come from inconsistencies e.g. regarding RBAC
+  which are else difficult to see.
+
 
 * by deploying Policies (together with its Placementinfo) and using a simple ArgoCD-App (deployed on the Hub) you can bootstrap and consistently configure a whole fleet of Clusters
-advanced Templating features optimized for Multi-Cluster-Management which includes Secrets-Management)
-* option to generate resources (e.g Roles, Rolebindings) in one or several namespaces based on namespace names, labels or complex expressions
-* optionally patching resources  (merge/replace implemented via musthave versus mustonlyhave controls)
-* option to just monitor resources instead of creating/patching them (inform, versus enforce), it is possible to monitor the status of any Kubernetes-Object
-* option to delete certain objects (delete implemented via mustnothave)
-* option to group objects to certain sets (PolicySets), this feature has both UI/Gitops-Support
-* possibility to configure how often checks should be evaluated considering the current status of an evaluated Object
 
-https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html-single/governance/index#policy-overview    
+* You get advanced Templating features optimized for Multi-Cluster-Management which includes Secrets-Management where you can securely copy a secret from the Hub to a ManagedCluster.
+
+```
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                kind: Secret
+                type: Opaque
+                metadata:
+                  name: config-demo-secret
+                  namespace: config-demo
+                apiVersion: v1
+                data:
+                  secret: '{{ `{{hub fromSecret "config-demo" "config-demo-secret" "secret" hub}}` }}'
+```
+
+* There is the option to generate resources (e.g Roles, Rolebindings) in one or several namespaces based on namespace `names`, `labels` or `expressions`.
+
+In ACM 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and `expression`:
+
+```
+namespaceSelector:
+  matchLabels:
+    name: test2
+  matchExpressions:
+    key: name
+    operator: In
+    values: ["test1", "test2"]
+```
+
+* You have the capability to patch resources. This means if a Kubernetes-Object must contain certain values you specify `musthave` in case you can tolerate other fields.
+  Else - if the object must match exactly - you can specify `mustonlyhave`.
+
+
+* We provide the option to just monitor resources instead of creating/patching them (inform, versus enforce). It is possible to monitor the status of any Kubernetes-Object.
+  In this case we check for namespaces in `terminating` status leading to a violation.
+
+```
+        spec:
+          remediationAction: inform
+          severity: low
+          object-templates:
+            - complianceType: mustnothave
+              objectDefinition:
+                apiVersion: v1
+                kind: Namespace
+                status:
+                  phase: Terminating
+```
+
+* Similar to above we provide the option to delete certain objects, you would just set the `remediationAction` to `enforce`.
+
+  Please check here for more [examples](https://github.com/stolostron/governance-policy-framework/blob/main/doc/configuration-policy/README.md#basic-usage) regarding the previous points.
+
+
+* RHACM's Governance framework provides the option to group objects to certain sets (PolicySets), a feature which has both UI and Gitops-Support
+  - See how PolicySets can be configured using [PolicyGenerator:](https://github.com/stolostron/policy-collection/blob/main/policygenerator/policy-sets/community/openshift-plus/policyGenerator.yaml#L154)
+  - See an example of a PolicySet being stored in git by checking:
+
+```
+    apiVersion: policy.open-cluster-management.io/v1beta1
+    kind: PolicySet
+    metadata:
+      name: certificates-policyset
+      namespace: cert-manager
+    spec:
+      description: "Grouping policies related to certificate handling"
+      policies:
+        - azure-clusterissuer-policy
+        - cert-manager-csv-policy
+        - certification-expiration-policy
+```
+
+  - See how they look in the UI:
+
+* You have the possibility to configure how often checks should be evaluated considering the current status of an evaluated Object
+
 ```
   spec:
     evaluationInterval:
     compliant: 10m
     noncompliant: 10s
 ```
+
+This example 
 ```
 spec.evaluationInterval.compliant: never
 ```
-Stops evaluating the policy once it is in compliant state. So only enforces it once.
+stops evaluating the policy once it is in compliant state. So only enforces it once.
+
+The above feature has mainly the advantage to tune environments with many policies to consume less resources.
+
+* You can use PolicyGenerator which also can be used for integration of Kyverno and Gatekeeper 
+
+In the following example we create a Policy for creating an ArgoCD-Notification config map using PolicyGenerator
 
 
-integration with Kyverno/Gatekeeper (implemented using PolicyGenerator but also UI-support)
 * Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every Single Policy
+
 * Option to have less/or more fine grained checks by using Configuration-Policies
-* Monitoring- and Ansible-integration (gives you option to implement Automated Governance)
+
+  This means you can create one ConfigurationPolicy for every single Kubernetes-Object or bundle many of them. Each Configuration Policy will be 
+  one unit when it comes to check the status in the UI. 
+
+* Monitoring- and Ansible-integration (gives you the option to implement Automated Governance)
+
+  Those topics have already been explained in the following blogs:
+
 * Policies can be used to check for expired Certificates in different namespaces
+
+```
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: CertificatePolicy
+      metadata:
+        name: certificate-policy-1
+        namespace: kube-system
+        label:
+          category: "System-Integrity"
+      spec:
+        # include are the namespaces you want to watch certificatepolicies in, while exclude are the namespaces you explicitly do not want to watch
+        namespaceSelector:
+          include: ["default", "kube-*"]
+          exclude: ["kube-system"]
+        # Can be enforce or inform, however enforce doesn't do anything with regards to this controller
+        remediationAction: inform
+        # minimum duration is the least amount of time the certificate is still valid before it is considered non-compliant
+        minimumDuration: 100h
+```
+
+
+### Running the example
+
+
+All you need to do is executing this [example](https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/setuppolicies.yaml), execute
+it 2 times with some interval of ca 30 sec as GitopsOperator might need to be installed first.
+
+
+ArgoCD in `policies namespace` is configured to setup PolicyGenerator
+
+```
+  repo:
+    resources:
+      limits:
+        cpu: '1'
+        memory: 512Mi
+      requests:
+        cpu: 250m
+        memory: 256Mi
+    env:
+    - name: KUSTOMIZE_PLUGIN_HOME
+      value: /etc/kustomize/plugin
+    initContainers:
+    - args:
+      - cp /etc/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/PolicyGenerator
+        /policy-generator/PolicyGenerator
+      command:
+      - sh
+      - -c
+      image: registry.redhat.io/rhacm2/multicluster-operators-subscription-rhel8:v2.6.2
+      name: policy-generator-install
+      volumeMounts:
+      - mountPath: /policy-generator
+        name: policy-generator
+    volumeMounts:
+    - mountPath: /etc/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator
+      name: policy-generator
+    volumes:
+    - emptyDir: {}
+      name: policy-generator
+  kustomizeBuildOptions: --enable-alpha-plugins
+```
+
+We deploy three Applications with only slighty different purpososes:
+
+1. Application 1:  Stable (means supported)-PolicySet in order to harden RHACM. PolicyGenerator is used.
+2. Custom PolicySet e.g. for Configuration-Purposes. It contains one one policy and is designed to be extended. PolicyGenerator is used also here.
+3. Deploying supported Policies from our PolicyCollection repository. As we need to apply them from Subdirectories the following property `recurse: true` has to be present (unlike in the first  
+   two Applications):
+
+```
+  source:
+    path: stable
+    repoURL: https://github.com/ch-stark/policy-collection
+    targetRevision: HEAD
+    directory:
+      recurse: true # <--- Here
+```
+
+
+This overview had the purpose to explain why it is a good idea to use policies together with GitOpsOperator/ArgoCD. You get all the benefits highlighted above basically
+out of the box.
