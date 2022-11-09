@@ -97,14 +97,13 @@ Deploying Policies with ArgoCD is easy. In the following we will list the advant
             compliant: 10m
             noncompliant: 10s
 ```
-    This example 
+      This example 
 
 ```
         spec.evaluationInterval.compliant: never
 ```
-stops evaluating the policy once it is in compliant state. So enforces it only once.
-
-The above feature has mainly the advantage to tune environments with many policies to consume less resources.
+       stops evaluating the policy once it is in compliant state. So enforces it only once.
+       The above feature has mainly the advantage to tune environments with many policies to consume less resources.
 
 * You can use PolicyGenerator which also can be used for integration of Kyverno and Gatekeeper 
 
@@ -121,7 +120,7 @@ The above feature has mainly the advantage to tune environments with many polici
 
 * Monitoring- and Ansible-integration (gives you the option to implement Automated Governance)
 
-  Those topics have already been explained in the following blogs:
+  Those topics have already been explained in several blogs which can be found [here](https://github.com/stolostron/policy-collection/tree/main/blogs).
 
 * Policies can be used to check for expired Certificates in different namespaces
 
@@ -146,8 +145,7 @@ The above feature has mainly the advantage to tune environments with many polici
 
 ### Running the example
 
-All you need to do is executing this [example](https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/setuppolicies.yaml), execute
-it 2 times with some interval of ca 30 sec as GitopsOperator might need to be installed first.
+All you need to do is executing this [example](https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/setuppolicies.yaml), execute it 2 times with some interval of ca 30 sec as GitopsOperator might need to be installed first.
 
 ArgoCD in `policies namespace` is configured to setup PolicyGenerator
 
