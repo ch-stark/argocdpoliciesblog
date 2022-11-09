@@ -8,7 +8,8 @@ Deploying Policies with ArgoCD is easy. In the following we will list the advant
 * RHACM can be used to install/configure Gitops-Operator/ArgoCD consistently either on the Hub or on Managed-Clusters.
   Using the App-of-Apps pattern you can e.g. have a root Gitops-Operator/ArgoCD -Application which deploys other Applications from them one or more can have the purpose to deploy Policies. 
 
-* It offers you the option to enforce and monitor the settings of ArgoCD regardless if you have a centralized or decentralized approach. This means you can consistently rollout Gitops-Operator/Argocd to your fleet of clusters avoiding any issues which come from inconsistencies e.g. regarding RBAC and which are else difficult to see and to troubleshoot.
+* It offers you the option to enforce and monitor the settings of Gitops-Operator/ArgoCD regardless if you have a centralized or decentralized approach. This means you can consistently rollout 
+  the configuration to your fleet of clusters avoiding any issues which come from inconsistencies e.g. regarding RBAC and which are later difficult to see and to troubleshoot.
 
 * by deploying Policies (together with its Placementinfo) and using a simple ArgoCD-App (deployed on the Hub) you can bootstrap and consistently configure a whole fleet of Clusters
 
@@ -28,7 +29,7 @@ Deploying Policies with ArgoCD is easy. In the following we will list the advant
                   secret: '{{ `{{hub fromSecret "config-demo" "config-demo-secret" "secret" hub}}` }}'
 ```
 
-* There is the option to generate resources (e.g Roles, Rolebindings) in one or several namespaces based on namespace `names`, `labels` or `expressions`.
+* There is the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces based on namespace `names`, `labels` or `expressions`.
 
   In ACM 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and `expression`:
 
@@ -43,9 +44,9 @@ Deploying Policies with ArgoCD is easy. In the following we will list the advant
 ```
 
 * You have the capability to patch resources. This means if a Kubernetes-Object must contain certain values you specify `musthave` in case you can tolerate other fields.
-  Else - if the object must match exactly - you can specify `mustonlyhave`.
+  Else - if the object must match exactly - you must specify `mustonlyhave`.
 
-* We provide the option to just monitor resources instead of creating/patching them (inform, versus enforce). It is possible to monitor the status of any Kubernetes-Object.
+* We provide the option to just monitor resources instead of creating/patching them (`inform`, versus `enforce`). It is possible to monitor the status of any Kubernetes-Object.
   In this case we check for namespaces in `terminating` status leading to a violation.
 
 ```
@@ -198,4 +199,4 @@ We deploy three Applications with only slighty different purpososes:
           recurse: true # <--- Here
 ```
 
-This short overview had the purpose to explain why it is a good idea to use policies together with GitOpsOperator/ArgoCD. You get all the benefits highlighted above out of the box.
+This short overview had the purpose to explain why it is a good idea to use policies together with GitOpsOperator/ArgoCD. Both approaches can benefit from each other. You get all the benefits highlighted above out of the box.
