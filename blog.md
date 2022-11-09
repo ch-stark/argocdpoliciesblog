@@ -144,7 +144,6 @@ The above feature has mainly the advantage to tune environments with many polici
 
 ### Running the example
 
-
 All you need to do is executing this [example](https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/setuppolicies.yaml), execute
 it 2 times with some interval of ca 30 sec as GitopsOperator might need to be installed first.
 
@@ -186,10 +185,11 @@ ArgoCD in `policies namespace` is configured to setup PolicyGenerator
 
 We deploy three Applications with only slighty different purpososes:
 
-1. Application 1:  Stable (means supported)-PolicySet in order to harden RHACM. PolicyGenerator is used.
-2. Custom PolicySet e.g. for Configuration-Purposes. It contains one one policy and is designed to be extended. PolicyGenerator is used also here.
-3. Deploying supported Policies from our PolicyCollection repository. As we need to apply them from Subdirectories the following property `recurse: true` has to be present (unlike in the first  
-   two Applications):
+- Application 1 deploys a `Stable` (means supported)-PolicySet in order to harden RHACM. PolicyGenerator is used.
+- Application 2 deploys a custom PolicySet e.g. for Configuration-Purposes. It contains one policy and is designed to be   
+  extended. PolicyGenerator is used also here.
+- With Application 3 we are deploying supported Policies from our PolicyCollection repository. As we need to apply them from
+  Subdirectories the following property `recurse: true` has to be present (unlike in the first two Applications):
 
 ```
       source:
