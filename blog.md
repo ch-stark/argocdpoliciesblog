@@ -62,6 +62,12 @@ spec:
       phase: Terminating
 ```
 
+In this example none of the 4 evaluated Clusters has such a violation
+
+![Check Terminating](images/policy-terminating.png)
+
+
+
 * Similar to above we provide the option to delete certain objects, you would just set the `remediationAction` to `enforce`.
 
   Please check here for more [examples](https://github.com/stolostron/governance-policy-framework/blob/main/doc/configuration-policy/README.md#basic-usage) regarding the previous points.
