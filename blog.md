@@ -89,7 +89,7 @@ kind: PolicySet
   - certification-expiration-policy
 ```
 
-  - See how they look in the UI:
+  - See how they look in the UI (examples taken from our [Kyverno-Policysets](https://github.com/stolostron/policy-collection/tree/main/policygenerator/policy-sets/community/kyverno)):
 
 * You have the possibility to configure how often checks should be evaluated considering the current status of an evaluated Object
 
