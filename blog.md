@@ -210,8 +210,8 @@ source:
     recurse: true # <--- Here
 ```
 
-See some of the Policies being synced onto the HubCluster using ArgoCD-Applications in the [Governance-View](images/policies_from_argo.png)
-
+See some of the Policies being synced onto the HubCluster using ArgoCD-Applications in the Governance-View.
+![Governance-View](images/policies_from_argo.png)
 
 
 This short overview had the purpose to explain why it is a good idea to use policies together with GitOpsOperator/ArgoCD. Both approaches can benefit from each other. You get all the benefits highlighted above out of the box.
