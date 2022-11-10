@@ -108,17 +108,11 @@ spec:
   compliant: 10m
   noncompliant: 10s
 
+spec.evaluationInterval.compliant: never
 ```
 
-     This example 
-
-```
-  spec.evaluationInterval.compliant: never
-
-```
-
-     stops evaluating the policy once it is in compliant state. So it enforces it only once.
-     The above feature has mainly the advantage to tune environments with many policies to consume less resources.
+  The above example stops evaluating the policy once it is in compliant state. So it enforces it only once.
+  The feature has mainly the advantage to tune environments with many policies to consume less resources.
 
 * You can use PolicyGenerator (at Runtime) which also can be used for integration of Kyverno and Gatekeeper 
 
