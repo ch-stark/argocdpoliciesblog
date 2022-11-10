@@ -1,19 +1,18 @@
 ## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
 
-Sometimes we are getting asked about the relationship between Gitops-Operator/ArgoCD and Red Hat Advanced Cluster Management (RHACM)-Policies and if they can fit together.
-Deploying Policies with ArgoCD is easy. In the following we will list the advantages of the integration showing some examples.
+Sometimes we are getting asked about the relationship between Gitops-Operator/ArgoCD and Red Hat Advanced Cluster Management (RHACM)-Policies and if they can be used together.
+In the following we will list the advantages of the integration showing some examples.
 
 ## Advantages of using RHACM with ArgoCD
 
-* RHACM can be used to install/configure Gitops-Operator/ArgoCD consistently either on the Hub or on Managed-Clusters.
+* RHACM can be used to install/configure Gitops-Operator/ArgoCD consistently either on the Hub or on Managed-Clusters. See an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
   Using the `App-of-Apps` pattern you can e.g. have a root Gitops-Operator/ArgoCD-Application which deploys other Applications from them one or more can have the purpose to deploy Policies. 
+  Please review this blog for a comprehensive example how to bootstrap an Environment using [Policies](https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/)
 
 * It offers you the option to enforce and monitor the settings of Gitops-Operator/ArgoCD regardless if you have a `centralized` or `decentralized` approach. This means you can consistently rollout 
   the configuration to your fleet of clusters avoiding any issues which come from inconsistencies e.g. regarding RBAC and which are later difficult to troubleshoot.
 
-* by deploying Policies (together with its Placementinfo) and using a simple ArgoCD-App (deployed on the Hub) you can bootstrap and consistently configure a whole fleet of Clusters
-
-* You get advanced Templating features optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where you can securely copy a secret from the Hub to a ManagedCluster
+* You get advanced templating features optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where you can securely copy a secret from the Hub to a ManagedCluster
   like in below example.
 
 ```
@@ -105,11 +104,12 @@ spec:
   stops evaluating the policy once it is in compliant state. So enforces it only once.
   The above feature has mainly the advantage to tune environments with many policies to consume less resources.
 
-* You can use PolicyGenerator which also can be used for integration of Kyverno and Gatekeeper 
+* You can use PolicyGenerator (at Runtime) which also can be used for integration of Kyverno and Gatekeeper 
 
   In the following example we use a Policy for creating an `ArgoCD-Notification` config map using PolicyGenerator.
   As the config map already contains templating-expression we disable RHACM-Templating for this Policy in the PolicyGenerator  
-  file.
+  file. PolicyGenerator can be used in ArgoCD to transform yaml-resources to Policies at Runtime. The integration works via CustomTooling as you see [here]
+  (https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
 
 * Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every Single Policy
 
@@ -193,7 +193,7 @@ We deploy three Applications with only slighty different purpososes:
 ```
 source:
   path: stable
-  repoURL: https://github.com/ch-stark/policy-collection
+  repoURL: https://github.com/stolostron/policy-collection
   targetRevision: HEAD
   directory:
     recurse: true # <--- Here
