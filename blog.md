@@ -91,6 +91,9 @@ kind: PolicySet
 
   - See how they look in the UI (examples taken from our [Kyverno-Policysets](https://github.com/stolostron/policy-collection/tree/main/policygenerator/policy-sets/community/kyverno)):
 
+![Kyverno-Policysets](images/policysets.png)
+
+
 * You have the possibility to configure how often checks should be evaluated considering the current status of an evaluated Object
 
 ```
@@ -114,7 +117,12 @@ spec:
   file. PolicyGenerator can be used in ArgoCD to transform yaml-resources to Policies at Runtime. The integration works via CustomTooling as you see [here]
   (https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
 
-* Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every Single Policy
+* Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every Single Policy.
+
+  See here example of our Build-In policy which checks if backup is setup correctly:
+
+  ![Backup Policy](images/backuprestore.png)
+
 
 * Option to have less/or more fine grained checks by using Configuration-Policies
 
