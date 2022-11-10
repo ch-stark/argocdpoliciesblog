@@ -121,8 +121,6 @@ spec.evaluationInterval.compliant: never
   file. PolicyGenerator can be used in ArgoCD to transform yaml-resources to Policies at Runtime. The integration works via CustomTooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
 
 
-  ![Integrate Notifications](images/argocdnotifications.jpeg)
-
 * Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every Single Policy.
 
   See here example of our Build-In policy which checks if backup is setup correctly:
