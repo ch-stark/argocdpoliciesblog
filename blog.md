@@ -10,7 +10,7 @@ In the following we will list the advantages of the integration showing some exa
   Please review this [blog]((https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/)) for a comprehensive example how to bootstrap an Environment using Policies.
 
 * It offers you the option to enforce and monitor the settings of Gitops-Operator/ArgoCD regardless if you have a `centralized` or `decentralized` approach. This means you can consistently rollout 
-  the configuration to your fleet of clusters avoiding any issues which come from `inconsistencies1 e.g. regarding RBAC and which are later difficult to troubleshoot.
+  the configuration to your fleet of clusters avoiding any issues which come from `inconsistencies` e.g. regarding RBAC and which are later difficult to troubleshoot.
 
 * You get advanced templating features optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where you can securely copy a secret from the Hub to a ManagedCluster
   like in below example.
