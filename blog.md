@@ -101,12 +101,15 @@ spec:
   evaluationInterval:
   compliant: 10m
   noncompliant: 10s
+  
 ```
+
   This example 
 
 ```
   spec.evaluationInterval.compliant: never
 ```
+
   stops evaluating the policy once it is in compliant state. So it enforces it only once.
   The above feature has mainly the advantage to tune environments with many policies to consume less resources.
 
