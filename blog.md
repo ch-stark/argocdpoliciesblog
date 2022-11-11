@@ -3,7 +3,7 @@
 Sometimes we are getting asked about the relationship between Gitops-Operator/ArgoCD and Red Hat Advanced Cluster Management (RHACM)-Policies and if they can be used together.
 In the following we will list the advantages of the integration showing some examples.
 
-## Advantages of using RHACM with ArgoCD
+## Advantages of using Policies with ArgoCD
 
 * RHACM can be used to install/configure Gitops-Operator/ArgoCD consistently either on the Hub or on Managed-Clusters. See an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
   Using the `App-of-Apps` pattern you can e.g. have a root Gitops-Operator/ArgoCD-Application which deploys other Applications from them one or more can have the purpose to deploy Policies. 
