@@ -201,9 +201,9 @@ We deploy three Applications with only slighty different purpososes:
 
 - `Application 1` deploys a `stable` (means supported)-PolicySet in order to harden RHACM. PolicyGenerator is used.
 - `Application 2` deploys a custom PolicySet e.g. for Configuration-Purposes. It contains one policy and is designed to be   
-  extended. PolicyGenerator is used also here.
-- With `Application 3` we are deploying supported Policies from our `PolicyCollection` repository. As we need to apply them
-  from `subdirectories` the following property `recurse: true` has to be present (unlike in the first two Applications).
+   extended. PolicyGenerator is used also here.
+-  With `Application 3` we are deploying supported Policies from our `PolicyCollection` repository. As we need to apply them
+   from `subdirectories` the following property `recurse: true` has to be present (unlike in the first two Applications).
 
 ```
 source:
@@ -214,8 +214,8 @@ source:
     recurse: true # <--- Here
 ```
 
-See some of the Policies being synced onto the HubCluster using ArgoCD-Applications in the Governance-View.
+See some of the Policies being synced onto the Hub-Cluster using ArgoCD-Applications in the `Governance-View`.
 ![Governance-View](images/policies_from_argo.png)
 
 
-This short overview had the purpose to explain why it is a good idea to use policies together with GitOpsOperator/ArgoCD. Both approaches can benefit from each other. You get all the benefits highlighted above out of the box.
+This short overview had the purpose to explain why it is a good idea to use policies together with GitOpsOperator/ArgoCD. Both approaches can benefit from each other. Certainly it needs to be highlighted that the focus of RHACM-Policies is to support Customer to achieve more easier `compliance` from a technical point of view.  You get all the benefits highlighted above out of the box.
