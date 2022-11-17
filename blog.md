@@ -7,7 +7,7 @@ In the following we will list the advantages of the integration by showing some 
 
 * RHACM can be used to install/configure Gitops-Operator/ArgoCD consistently either on the Hub or on Managed-Clusters. See an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
   Using the `App-of-Apps` pattern you can e.g. have a root `Gitops-Operator/ArgoCD-Application` which deploys other Applications. One of those child-apps could have the purpose to deploy Policies. 
-  Please review this [blog]((https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/)) for a comprehensive example how to bootstrap an Environment using Policies.
+  Please review this [blog](https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/) for a comprehensive example how to bootstrap an Environment using Policies.
 
 * It offers you the option to enforce and monitor the settings of `Gitops-Operator/ArgoCD` regardless if you have a `centralized` or `decentralized` approach. This means you can consistently rollout 
   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC and which are later difficult to troubleshoot.
