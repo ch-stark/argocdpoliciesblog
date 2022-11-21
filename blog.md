@@ -218,4 +218,4 @@ See some of the Policies being synced onto the Hub-Cluster using ArgoCD-Applicat
 ![Governance-View](images/policies_from_argo.png)
 
 
-This short overview had the purpose to explain why it is a good idea to use policies together with GitOpsOperator/ArgoCD. Both approaches can benefit from each other. Certainly it needs to be highlighted that the focus of RHACM-Policies is to support Customer to achieve more easier `compliance` from a technical point of view.  You get all the benefits highlighted above out of the box.
+This short overview had the purpose to explain why it is a good idea to use policies together with GitOpsOperator/ArgoCD. Both approaches can benefit from each other.  Certainly it needs to be highlighted that the focus of RHACM-Policies is to support customers becoming `compliant` from a technical point of view.  You get all the benefits highlighted above out of the box.
