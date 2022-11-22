@@ -100,6 +100,12 @@ kind: PolicySet
 ![Kyverno-Policysets](images/policysets.png)
 
 
+See how the OpenShift-Hardening-Policyset looks like
+
+![OpenShift-Hardening](images/openshifthardening.png)
+
+
+
 * You have the possibility to configure how often checks should be evaluated considering the current status of an evaluated Object
 
 ```
