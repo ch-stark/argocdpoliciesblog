@@ -99,7 +99,7 @@ kind: PolicySet
 ![Kyverno-Policysets](images/policysets.png)
 
 
-See how the OpenShift-Hardening-Policyset looks like
+See how the [OpenShift-Hardening-Policyset](https://github.com/stolostron/policy-collection/tree/main/policygenerator/policy-sets/community/openshift-hardening) looks like. You see some policies are compliant, some others are not and need investigation.
 
 ![OpenShift-Hardening](images/openshifthardening.png)
 
