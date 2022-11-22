@@ -1,11 +1,11 @@
 ## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
 
 Often we are getting asked about the relationship between `Gitops-Operator/ArgoCD` and `Red Hat Advanced Cluster Management's` (RHACM's)-Policies-Framework and if they can be used together. To start with:
-They are a `perfect` fit and in the following we will list the advantages of the integration by showing some concrete examples.
+They are a `perfect` fit and you could even consider RHACM Governance as an Governance extension for existing customers. In the following we will list the advantages of the integration by showing some concrete examples.
 
 ## Advantages of using Policies with ArgoCD
 
-* RHACM can be used to install/configure Gitops-Operator/ArgoCD consistently either on the Hub or on Managed-Clusters. See an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
+* RHACM-Policies can be used to install/configure Gitops-Operator/ArgoCD consistently either on the Hub or on Managed-Clusters. See an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
   Using the `App-of-Apps` pattern you can e.g. have a root `Gitops-Operator/ArgoCD-Application` which deploys other Applications. One of those child-apps could have the purpose to deploy Policies. 
   Please review this [blog](https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/) for a comprehensive example how to bootstrap an environment using Policies.
 
@@ -139,8 +139,11 @@ See here example of our `build-in policy` which checks if backup is setup correc
 
 * Monitoring- and Ansible-integration (gives you the option to implement `Automated Governance`)
 
-  Those topics have already been explained in several blogs which can be found [here](https://github.com/stolostron/policy-collection/tree/main/blogs).
-
+  Those topics have already been explained in several blogs which can be found [here](https://github.com/stolostron/policy-collection/tree/main/blogs) just to summarize:
+  
+  - you can give Policies a `severity` sending alerts via `RHACM's Obvervability` framework only from high-prio policies
+  - you can invoke Ansible-Jobs from Policies so you could only invoke Ansible from critical policies
+   
 * Policies can be used to check for expired Certificates in different namespaces
 
 ```
