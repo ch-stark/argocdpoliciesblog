@@ -224,11 +224,11 @@ See some of the Policies being synced onto the Hub-Cluster using ArgoCD-Applicat
 
 ## Fixing the issues that ArgoCD gets out of sync
 
-As a nice example it turned out that as the `RHACM-Policy-Controller` is copying policies into the namespace presenting a Managed-Cluster on the Hub and creating Configuration-Policies which will be copied onto the Managed-Clusters. ArgoCD-Applications therefore become out-of-sync. This can be fixed by setting the resource tracking method to [annotation](https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method).
+As a nice example how ArgoCD can be configured to optimize the interaction with RHACM-policies it turned out that as the `RHACM-Policy-Controller` is copying policies into the namespace presenting a Managed-Cluster on the Hub and creating Configuration-Policies which will be copied onto the Managed-Clusters. ArgoCD-Applications therefore become out-of-sync. This can be fixed by setting the resource tracking method to [annotation](https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method).
 
 ### Summary
 
-This short overview had the purpose to explain why it is a good idea to use policies together with GitOpsOperator/ArgoCD. Both approaches can benefit from each other.  Certainly it needs to be highlighted that the focus of RHACM-Policies is to support customers becoming `compliant` from a technical point of view.  You get all the benefits highlighted above out of the box.
+This short overview had the purpose to explain why it is a good idea to use Policies together with GitOpsOperator/ArgoCD. Both approaches can heavily benefit from each other.  Certainly it needs to be highlighted that the focus of RHACM-Policies is to support customers becoming `compliant` from a technical point of view. It can be even seen as ArgoCD extension to Governance.  You get all the great benefits highlighted above out of the box.
 Certainly both sides will provide further features in the future like enhanced `Operator` or `Dependency` Management.
 
 
