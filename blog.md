@@ -1,7 +1,7 @@
 ## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
 
-Sometimes we are getting asked about the relationship between Gitops-Operator/ArgoCD and Red Hat Advanced Cluster Management (RHACM)-Policies and if they can be used together.
-In the following we will list the advantages of the integration by showing some examples.
+Often we are getting asked about the relationship between `Gitops-Operator/ArgoCD` and `Red Hat Advanced Cluster Management's` (RHACM's)-Policies-Framework` and if they can be used together. To start with:
+They are a perfect fit and in the following we will list the advantages of the integration by showing some examples.
 
 ## Advantages of using Policies with ArgoCD
 
@@ -10,8 +10,7 @@ In the following we will list the advantages of the integration by showing some 
   Please review this [blog](https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/) for a comprehensive example how to bootstrap an Environment using Policies.
 
 * It offers you the option to enforce and monitor the settings of `Gitops-Operator/ArgoCD` regardless if you have a `centralized` or `decentralized` approach. This means you can consistently rollout 
-  the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC and which are later difficult to troubleshoot.
-
+  the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC and which are later difficult to troubleshoot. 
 * You get advanced templating features optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
 
 ```
@@ -223,5 +222,15 @@ source:
 See some of the Policies being synced onto the Hub-Cluster using ArgoCD-Applications in the `Governance-View`.
 ![Governance-View](images/policies_from_argo.png)
 
+## Fixing the issues that ArgoCD gets out of sync
+
+As a nice example it turned out that as the `RHACM-Policy-Controller` is copying policies into the namespace presenting a Managed-Cluster on the Hub and creating Configuration-Policies which will be applied on the Managed-Clusters. ArgoCD-Applications therefore become out-of-sync. This can be fixed by setting the resource tracking method to [annotation](https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method) For sure it makes sense to set this consistently.
+
+
+### Summary
 
 This short overview had the purpose to explain why it is a good idea to use policies together with GitOpsOperator/ArgoCD. Both approaches can benefit from each other.  Certainly it needs to be highlighted that the focus of RHACM-Policies is to support customers becoming `compliant` from a technical point of view.  You get all the benefits highlighted above out of the box.
+
+
+
+
