@@ -128,7 +128,7 @@ spec.evaluationInterval.compliant: never
 
 * Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
 
-See here example of our Build-In policy which checks if backup is setup correctly:
+See here example of our `build-in policy` which checks if backup is setup correctly:
 
   ![Backup Policy](images/backuprestore.png)
 
