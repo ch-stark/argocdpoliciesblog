@@ -39,6 +39,7 @@ metadata:
   name: policies
   namespace: policies
 spec:
+  resourceTrackingMethod: annotation
   server:
     resources:
       limits:
