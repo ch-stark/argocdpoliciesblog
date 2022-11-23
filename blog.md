@@ -14,17 +14,16 @@ They are a `perfect` fit and you could even consider RHACM Governance as an Gove
 * You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
 
 ```
-object-templates:
-  - complianceType: musthave
-    objectDefinition:
-      kind: Secret
-      type: Opaque
-      metadata:
-        name: config-demo-secret
-        namespace: config-demo
-      apiVersion: v1
-        data:
-          secret: '{{ `{{hub fromSecret "config-demo" "config-demo-secret" "secret" hub}}` }}'
+              objectDefinition:
+                apiVersion: v1
+                data:
+                  city: '{{hub fromSecret "" "hub-secret" "city" hub}}'
+                  state: '{{hub fromSecret "" "hub-secret" "state" hub}}'
+                kind: Secret
+                metadata:
+                  name: copied-secret
+                  namespace: target
+
 ```
 
 * There is the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces based on namespace `names`, `labels` or `expressions`.
