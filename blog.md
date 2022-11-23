@@ -12,7 +12,7 @@ They are a `perfect` fit and you could even consider RHACM Governance as an Gove
   Using the `App-of-Apps` pattern you can e.g. have a root `Gitops-Operator/ArgoCD-Application` which deploys other Applications. One of those child-apps could have the purpose to deploy Policies. 
   Please review this [blog](https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/) for a comprehensive example how to bootstrap an environment using Policies.
 
-* It offers you the option to enforce and monitor the settings of `Gitops-Operator/ArgoCD` regardless if you have a `centralized` or `decentralized` approach. This means you can consistently rollout 
+* It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/ArgoCD` regardless if you have a `centralized` or `decentralized` approach. This means you can consistently rollout 
   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC and which are later difficult to troubleshoot. 
 * You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
 
@@ -31,7 +31,7 @@ They are a `perfect` fit and you could even consider RHACM Governance as an Gove
 
 * There is the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces based on namespace `names`, `labels` or `expressions`.
 
- In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and `expression` which gives more more flexibility on which namespaces you like to operate on:
+ In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and `expression` which gives you more flexibility on which namespaces you like to operate on:
 
 ```
 namespaceSelector:
@@ -63,7 +63,7 @@ spec:
       phase: Terminating
 ```
 
-In the following example none of the 4 evaluated Clusters has such a violation
+In the following example none of the 4 evaluated Clusters has such a violation.
 
 ![Check Terminating](images/policy-terminating.png)
 
@@ -117,14 +117,14 @@ spec:
 spec.evaluationInterval.compliant: never
 ```
 
-  The above example stops evaluating the policy once it is in compliant state. So it enforces it only once.
-  The feature has mainly the advantage to tune environments with many policies to consume less resources.
+The above example stops evaluating the policy once it is in compliant state. So it enforces it only once.
+The feature has mainly the advantage to tune environments with many policies to consume less resources.
 
 * You can use PolicyGenerator (at Runtime) which also can be used for integration of Kyverno and Gatekeeper 
 
-  In the following example we use a Policy for creating an `ArgoCD-Notification` config map using PolicyGenerator. This way you integrate Argo CD Notifications into RHACM GitOps bootstrap policies.
-  As the config map already contains templating-expression we disable RHACM-Templating for this Policy in the PolicyGenerator  
-  file. PolicyGenerator can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via CustomTooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
+In the following example we use a Policy for creating an `ArgoCD-Notification` config map using PolicyGenerator. This way you integrate Argo CD Notifications into RHACM GitOps bootstrap policies.
+As the config map already contains templating-expression we disable RHACM-Templating for this Policy in the PolicyGenerator  
+file. PolicyGenerator can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via CustomTooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
 
 
 * Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
@@ -206,7 +206,7 @@ repo:
 kustomizeBuildOptions: --enable-alpha-plugins
 ```
 
-We deploy three Applications with only slighty different purpososes:
+We deploy three Applications with only slighty different purposes:
 
 - `Application 1` deploys a `stable` (means supported)-PolicySet in order to harden RHACM. PolicyGenerator is used.
 - `Application 2` deploys a custom PolicySet e.g. for Configuration-Purposes. It contains one policy and is designed to be   
