@@ -228,7 +228,7 @@ See some of the Policies being synced onto the Hub-Cluster using ArgoCD-Applicat
 
 ## Fixing the issues that ArgoCD gets out of sync
 
-As a nice example how ArgoCD can be configured to optimize the interaction with RHACM-policies it turned out that as the `RHACM-Policy-Controller` is copying policies into the namespace presenting a Managed-Cluster on the Hub and creating Configuration-Policies which will be copied onto the Managed-Clusters. ArgoCD-Applications therefore become out-of-sync. This can be fixed by setting the resource tracking method to [annotation](https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method).
+A nice example how ArgoCD can be configured to optimize the interaction with RHACM-policies has been the following. It turned out that as the `RHACM-Policy-Controller` is copying policies into the namespace presenting a Managed-Cluster on the Hub and creating Configuration-Policies which will be copied onto the Managed-Clusters ArgoCD-Applications became out-of-sync. This can be fixed by setting the resource tracking method to [annotation](https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method) which is already included in the examples.
 
 ### Summary
 
