@@ -122,9 +122,8 @@ The feature has mainly the advantage to tune environments with many policies to 
 
 * You can use PolicyGenerator (at Runtime) which also can be used for integration of Kyverno and Gatekeeper 
 
-In the following example we use a Policy for creating an `ArgoCD-Notification` config map using PolicyGenerator. This way you integrate Argo CD Notifications into RHACM GitOps bootstrap policies.
-As the config map already contains templating-expression we disable RHACM-Templating for this Policy in the PolicyGenerator  
-file. PolicyGenerator can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via CustomTooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
+  PolicyGenerator can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via  
+  CustomTooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
 
 
 * Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
