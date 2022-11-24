@@ -32,6 +32,9 @@ See here for an overall Governance overview in RHACM-UI
                   namespace: target
 
 ```
+Benefits of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you customize specific elements of a policy over various clusters within the fleet.
+
+
 
 * There is the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces based on namespace `names`, `labels` or `expressions`.
 
