@@ -14,6 +14,10 @@ They are a `perfect` fit and you could even consider RHACM Governance as an Gove
 
 * It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/ArgoCD` regardless if you have a `centralized` or `decentralized` approach. This means you can consistently rollout 
   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC and which are later difficult to troubleshoot. 
+  
+See here for an overall Governance overview in RHACM-UI
+![Governance](images/governance.png)
+  
 * You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
 
 ```
