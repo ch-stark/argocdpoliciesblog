@@ -9,7 +9,21 @@ They are a `perfect` fit and you could even consider RHACM Governance as an Gove
 ## Advantages of using Policies with ArgoCD
 
 * RHACM-Policies can be used to install/configure Gitops-Operator/ArgoCD consistently either on the Hub or on Managed-Clusters. See an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
-  Using the `App-of-Apps` pattern you can e.g. have a root `Gitops-Operator/ArgoCD-Application` which deploys other Applications. One of those child-apps could have the purpose to deploy Policies. 
+
+as an example you could consistently overwrite the default Gitops-Instance
+
+```
+spec:
+  channel: stable
+  config:
+    env:
+    - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
+      value: "true"
+    - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+      value: <namespace to deploy to>
+```
+
+* Using the `App-of-Apps` pattern you can e.g. have a root `Gitops-Operator/ArgoCD-Application` which deploys other Applications. One of those child-apps could have the purpose to deploy Policies. 
   Please review this [blog](https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/) for a comprehensive example how to bootstrap an environment using Policies.
 
 * It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/ArgoCD` regardless if you have a `centralized` or `decentralized` approach. This means you can consistently rollout 
