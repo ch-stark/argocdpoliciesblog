@@ -155,6 +155,32 @@ The feature has mainly the advantage to tune environments with many policies to 
   PolicyGenerator can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via  
   CustomTooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
 
+  Let's take the following example. You want to deploy the following resources together:
+  
+  - Deployment: define which image to run.
+  - Service: component can be reached over the network.
+  - Ingress: the outside world can access our Service.
+  - ConfigMap: configure the component (often makes sense to make this templatized).
+  - Secret: supply credentials to the component (often makes sense to make this templatized).
+  - NetworkPolicy: restrict the component's attack surface.
+
+So you could place all `yaml-files` into a folder, together with the `checks` like `deployment must be running` and you can create a single Policy by just configure:
+
+```
+policies:
+# Deployment-Policy - start
+- name: policy-deployment
+  categories:
+    - System-Configuration
+  controls: 
+    - ApplicatonDeployment
+  manifests:
+    - path: input/
+```
+
+In the above all yaml files would be used to generate a single Policy. 
+
+
 
 * Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
 
