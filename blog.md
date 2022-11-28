@@ -1,6 +1,6 @@
 ## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
 
-Often we are getting asked about the relationship between `Gitops-Operator/ArgoCD` and `Red Hat Advanced Cluster Management's` (RHACM's)-Policies-Framework and if they can be used together. 
+Often we are getting asked by users/customers who are using or intending to use a `Gitops-Approach` about the relationship between `Gitops-Operator/ArgoCD` and `Red Hat Advanced Cluster Management's` (RHACM's)-Policies-Framework and if they can be used together. 
 
 To start with:
 
