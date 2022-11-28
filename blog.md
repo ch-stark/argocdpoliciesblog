@@ -23,6 +23,15 @@ spec:
       value: <namespace to deploy to>
 ```
 
+another example would be to configure [SSO](https://docs.openshift.com/container-platform/4.11/cicd/gitops/configuring-sso-for-argo-cd-using-keycloak.html) for your fleet of Gitops-Instances
+
+```
+spec:
+  sso:
+    provider: keycloak
+```
+
+
 * Using the `App-of-Apps` pattern you can e.g. have a root `Gitops-Operator/ArgoCD-Application` which deploys other Applications. One of those child-apps could have the purpose to deploy Policies. 
   Please review this [blog](https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/) for a comprehensive example how to bootstrap an environment using Policies.
 
