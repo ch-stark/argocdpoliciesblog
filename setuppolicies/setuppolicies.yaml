@@ -185,7 +185,7 @@ spec:
   project: policies
   source:
     path: policygenerator/policy-sets/community/openshift-hardening 
-    repoURL: https://github.com/ch-stark/policy-collection
+    repoURL: https://github.com/stolostron/policy-collection
     targetRevision: HEAD
   syncPolicy:
     syncOptions:
