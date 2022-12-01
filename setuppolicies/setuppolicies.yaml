@@ -9,6 +9,14 @@ kind: Namespace
 metadata:
   name: openshift-gitops-operator  
 ---
+apiVersion: cluster.open-cluster-management.io/v1beta2
+kind: ManagedClusterSetBinding
+metadata:
+  name: default
+  namespace: policies
+spec:
+  clusterSet: default
+---
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
