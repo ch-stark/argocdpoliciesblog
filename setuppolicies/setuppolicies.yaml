@@ -197,6 +197,27 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  name: policies6
+  namespace: policies
+spec:
+  destination:
+    namespace: policies
+    server: https://kubernetes.default.svc
+  project: policies
+  source:
+    path: .
+    repoURL: https://github.com/ch-stark/gatekeeper-examples
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      selfHeal: false
+      prune: true           
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
   name: policies3
   namespace: policies
 spec:
