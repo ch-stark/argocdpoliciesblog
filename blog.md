@@ -69,7 +69,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
        namespace: target
    ```
 
-   `Benefits` of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you    customize specific elements of a policy over various clusters within the fleet.
+  `Benefits` of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you    customize specific elements of a policy over various clusters within the fleet.
 
    See here an example how to create an ApplicationSet using `TemplatizedPolicies` approach:
 
@@ -127,9 +127,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
     ```
 
 4.  There is the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces based on namespace  
-    `names`, `labels` or `expressions`.
+   `names`, `labels` or `expressions`.
 
-    In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and           `expression` which gives you more flexibility on which namespaces you like to operate on:
+    In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and          `expression` which gives you more flexibility on which namespaces you like to operate on:
 
     ```
     namespaceSelector:
@@ -141,7 +141,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
         values: ["test1", "test2"]
     ```
 
-5.  You have the capability to patch resources. This means if a Kubernetes-Object must contain certain values you specify           `musthave` in case you can tolerate other fields.
+5.  You have the capability to patch resources. This means if a Kubernetes-Object must contain certain values you specify          `musthave` in case you can tolerate other fields.
     Else - if the object must match exactly - you must specify `mustonlyhave`.
 
     A often requested example is to disable the self-provisioner role from an existing OpenShift-Cluster:
@@ -258,7 +258,8 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    - `Secret`: supply credentials to the component (often makes sense to make this templatized).
    - `NetworkPolicy`: restrict the component's attack surface.
 
-   So you could place all `yaml-files` into a folder, together with the `checks` like `deployment must be running` and you can create a single Policy by just configure:
+   So you could place all `yaml-files` into a folder, together with the `checks` like `deployment must be running` and you can
+   create a single Policy by just configure:
 
    ```
    policies:
@@ -275,10 +276,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    In the above all yaml files would be used to generate a single Policy. 
 
    Please note that you can also generate Policies from folders which contain a `Kustomization`.
-
-   Let's check the following example:
-
-   This policy definition
+   Let's check the following example-extract:
 
    ```
    policies:
@@ -306,7 +304,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 12. Option to have less/or more fine grained checks by using Configuration-Policies
 
     This means you can create one `Configuration Policy` for every single Kubernetes-Object or bundle many of them. Each 
-    `Configuration Policy` will be one unit when it comes to check the status in the UI. 
+   `Configuration Policy` will be one unit when it comes to check the status in the UI. 
 
 13. Monitoring- and Ansible-integration (gives you the option to implement `Automated Governance`)
 
