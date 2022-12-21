@@ -57,7 +57,60 @@ See here for an overall Governance overview in RHACM-UI
 ```
 Benefits of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you customize specific elements of a policy over various clusters within the fleet.
 
+See here an example how to create an ApplicationSet using TemplatizedPolicies approach:
 
+```
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-as-bootstrap-gitops
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: gitops-argocd-applicationset
+        spec:
+          remediationAction: inform  # will be overridden by remediationAction in parent policy
+          severity: high
+          object-templates:
+            - complianceType: mustonlyhave
+              objectDefinition:
+                apiVersion: argoproj.io/v1alpha1
+                kind: ApplicationSet
+                metadata:
+                  name: as-bootstrap-acm
+                  namespace: openshift-gitops
+                spec:
+                  generators:
+                  - git:
+                      repoURL: https://gitlab.example.com/openshift/argocd-cluster-config.git
+                      revision: main
+                      files:
+                      - path: 'cluster-definitions/{{ fromClusterClaim "name" }}/cluster.json'
+                  template:
+                    metadata:
+                      name: 'ocp-{{ fromClusterClaim "name" }}-bootstrap-acm'
+                    spec:
+                      project: default
+                      source:
+                        repoURL: https://gitlab.example.com/openshift/argocd-cluster-config.git
+                        targetRevision: main
+                        path: "cluster-config/overlays/{{`{{cluster.name}}`}}"
+                      destination:
+                        server: https://kubernetes.default.svc
+                      syncPolicy:
+                        automated:
+                          prune: true
+                          selfHeal: true
+```
 
 * There is the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces based on namespace `names`, `labels` or `expressions`.
 
