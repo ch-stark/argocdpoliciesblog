@@ -7,7 +7,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
 ## Advantages of using Policies with ArgoCD
 
-1. RHACM-Policies can be used to install and configure Argo CD consistently either on the Managing or on Managed-Clusters. See    an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-   openshift-gitops.yaml).
+1. RHACM-Policies can be used to install and configure Argo CD consistently either on the Managing or on Managed-Clusters. See    an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
    The Policy is marked as part of the `Baseline-Configuration` of the `NIST SP 800-53` standard and could certainly be part of    any other standard you like to implement.
 
    ```
