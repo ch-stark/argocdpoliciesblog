@@ -135,6 +135,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
            operator: In
            values: ["test1", "test2"]
     ```
+    Benefit of this feature is that it reduces significantly the Policies you need to configure, e.g. when you want to copy a
+   `ConfigMap` into several namespace.
+
 
 5.  You have the capability to patch resources. This means if a Kubernetes-Object `must` contain certain values you specify        `musthave` in case you can tolerate other fields.
     Else - if the object must match exactly - you must specify `mustonlyhave`.
@@ -165,7 +168,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
 6.  We provide the option to just monitor resources instead of creating/patching them (can be configured via `inform`, versus
     `enforce`). It is possible to monitor the status of `any` Kubernetes-Object.
-    In this case we check for namespaces in `terminating` status.
+    In the following case we check for namespaces in `terminating` status.
 
     ```
        spec:
@@ -180,7 +183,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
             phase: Terminating
     ```
 
-   In the following example none of the 4 evaluated Clusters has such a violation.
+   In this example none of the 4 evaluated Clusters has such a violation.
 
    ![Check Terminating](images/policy-terminating.png)
 
@@ -223,7 +226,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
 
 9. You have the possibility to configure how often checks should be evaluated considering the current status of an evaluated  
-   Object
+   Object.
 
    ```
    spec:
