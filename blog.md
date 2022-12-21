@@ -68,11 +68,11 @@ In the following we will list the advantages of deploying RHACM-Policies using A
        namespace: target
    ```
 
-  `Benefits` of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you    customize specific elements of a policy over various clusters within the fleet.
+   `Benefits` of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you     customize specific elements of a policy over various clusters within the fleet.
 
-   See here an example how to create an ApplicationSet using `TemplatizedPolicies` approach:
+    See here an example how to create an ApplicationSet using `TemplatizedPolicies` approach:
 
-    ```
+   ```
     apiVersion: policy.open-cluster-management.io/v1
     kind: Policy
     metadata:
