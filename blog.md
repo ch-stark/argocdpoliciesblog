@@ -167,9 +167,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
                   name: self-provisioner
     ```
 
-6.  We provide the option to just monitor resources instead of creating/patching them (`inform`, versus `enforce`). It is   
-    possible to monitor the status of `any` Kubernetes-Object.
-    In this case we check for namespaces in `terminating` status leading to a violation.
+6.  We provide the option to just monitor resources instead of creating/patching them (can be configured via `inform`, versus
+    `enforce`). It is possible to monitor the status of `any` Kubernetes-Object.
+    In this case we check for namespaces in `terminating` status.
 
     ```
     spec:
@@ -243,10 +243,10 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    The above example stops evaluating the policy once it is in compliant state. So it enforces it only once.
    The feature has mainly the advantage to tune environments with many policies to consume less resources.
 
-10. You can use `PolicyGenerator` which also can be used for integration of Kyverno and Gatekeeper 
+10. You can use `PolicyGenerator` which also can be used for integration of `Kyverno` and `Gatekeeper`. 
 
   `PolicyGenerator` can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via  
-   CustomTooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
+   Custom Tooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
 
    Let's take the following example. You want to deploy the following resources together:
   
@@ -272,9 +272,10 @@ In the following we will list the advantages of deploying RHACM-Policies using A
        - path: input/
    ```
 
-   In the above all yaml files would be used to generate a single Policy. 
+   In the above all yaml-files would be used to generate a single Policy. 
 
    Please note that you can also generate Policies from folders which contain a `Kustomization`.
+   
    Let's check the following example-extract:
 
    ```
@@ -303,7 +304,8 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 12. Option to have less/or more fine grained checks by using Configuration-Policies
 
     This means you can create one `Configuration Policy` for every single Kubernetes-Object or bundle many of them. Each 
-   `Configuration Policy` will be one unit when it comes to check the status in the UI. 
+   `Configuration Policy` will be one unit when it comes to check the status in the UI as you see in the screenshot above.
+    Benefit is that it gives you more flexibility. 
 
 13. Monitoring- and Ansible-integration (gives you the option to implement `Automated Governance`)
 
@@ -311,8 +313,10 @@ In the following we will list the advantages of deploying RHACM-Policies using A
   
     - you can give Policies a `severity` sending alerts via `RHACM's Obvervability` framework only from high-prio policies
     - you can invoke Ansible-Jobs from Policies so you could only invoke Ansible from critical policies
+    - you could use the previously discussed `evaluationInterval` to trigger an Ansible Job at a regular basis.
    
-14. Policies can be used to check for expired Certificates in different namespaces
+14. Policies can be used to check for `expired` Certificates in different namespaces
+    Please review the following example:  
 
    ```
    apiVersion: policy.open-cluster-management.io/v1
@@ -335,10 +339,10 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    ### Running the example
 
-   All you need to do is executing this [example](https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/setuppolicies.yaml), execute it 2 times with some interval of ca 30 sec as  
+       All you need to do is executing this [example](https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/setuppolicies.yaml), execute it 2 times with some interval of ca 30 sec as  
    GitopsOperator might need to be installed first.
 
-   ArgoCD in `policies namespace` is configured to setup PolicyGenerator
+   The ArgoCD instance will be deployed in `policies namespace` and is configured to setup PolicyGenerator.
 
    ```
    repo:
@@ -374,7 +378,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ```
 
   We deploy several Applications with only slighty different purposes:
-
+  e.g. 
    - `Application 1` deploys a `stable` (means supported)-PolicySet in order to harden RHACM. PolicyGenerator is used.
    - `Application 2` deploys a custom PolicySet e.g. for Configuration-Purposes. It contains one policy and is designed to be   
       extended. PolicyGenerator is used also here.
@@ -391,15 +395,17 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ```
 
    See some of the Policies being synced onto the Hub-Cluster using ArgoCD-Applications in the `Governance-View`.
-![Governance-View](images/policies_from_argo.png)
+   ![Governance-View](images/policies_from_argo.png)
 
 ## Fixing the issues that ArgoCD gets out of sync
 
-   A nice example how ArgoCD can be configured to optimize the interaction with RHACM-policies has been the following. It  
-   turned out that as the `RHACM-Policy-Controller` is copying policies into the namespace presenting a Managed-Cluster on the    Hub and creating Configuration-Policies which will be copied onto the Managed-Clusters ArgoCD-Applications became out-of- 
-   sync. This can be fixed by setting the resource tracking method to [annotation](https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method) which is already included in the examples.
+   A nice example how ArgoCD can be configured to optimize the interaction with RHACM-policies has been the following. It   
+   turned out that as the RHACM-Policy-Controller is copying Policies into a namespace (representing a managed cluster)
+   therefore ArgoCD-Applications became out-of-sync. This can be fixed by setting the resource tracking method to [annotation]
+   (https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method) which is already included in  
+   the examples.
 
-   Again you can benefit from ACM's `Gatekeeper Integration` by using this `Gatekeeper-Contraint` together with 
+   Again you can benefit from ACM's `Gatekeeper Integration` by using this `Gatekeeper-Constraint` together with 
    PolicyGenerator.
 
    ```
@@ -425,7 +431,6 @@ In the following we will list the advantages of deploying RHACM-Policies using A
            # Matches annotation format
            allowedRegex: ^[a-zA-Z0-9-]+:.+$
    ```
-
 
 ### Summary
 
