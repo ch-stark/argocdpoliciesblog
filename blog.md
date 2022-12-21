@@ -1,8 +1,8 @@
 ## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
 
 In this blog, we are going to explore the relationship between OpenShift GitOps (Argo CD) and Red Hat Advanced Cluster Management's (RHACM's) policy framework and how they fit together.
-While RHACM is RedHat’s solution for Kubernetes `MultiClusterManagement` with a strong focus on governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just reached [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status. 
-In the following we will list the advantages of deploying RHACM-Policies using ArgoCD showing concrete examples.
+While RHACM is RedHat’s solution for Kubernetes `MultiClusterManagement` with a strong focus on governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just reached CNCF's [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status. 
+In the following we will list the advantages of deploying RHACM-Policies using Argo CD showing concrete examples.
 
 
 ## Advantages of using Policies with ArgoCD
@@ -44,14 +44,11 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 2. Using the `App-of-Apps` pattern you can e.g. have a root `Gitops-Operator/ArgoCD-Application` which deploys other
    Applications. One of those child-apps could have the purpose to deploy Policies. 
    Please review this [blog](https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/) for a comprehensive example
-   how to bootstrap an environment using Policies.
+   how to bootstrap an environment using Policies using this pattern.
 
 3. It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/ArgoCD` regardless if you have a  
    `centralized` or `decentralized` approach. This means you can consistently rollout 
    the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are later difficult to troubleshoot. 
-  
-   See here for an overall Governance overview in RHACM-UI
-   ![Governance](images/governance.png)
   
 4. You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where 
    you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
@@ -172,16 +169,16 @@ In the following we will list the advantages of deploying RHACM-Policies using A
     In this case we check for namespaces in `terminating` status.
 
     ```
-    spec:
-     remediationAction: inform
-     severity: low
-     object-templates:
-     - complianceType: mustnothave
-       objectDefinition:
-         apiVersion: v1
-         kind: Namespace
-         status:
-         phase: Terminating
+       spec:
+        remediationAction: inform
+        severity: low
+        object-templates:
+        - complianceType: mustnothave
+          objectDefinition:
+            apiVersion: v1
+            kind: Namespace
+            status:
+            phase: Terminating
     ```
 
    In the following example none of the 4 evaluated Clusters has such a violation.
@@ -195,25 +192,25 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    Please note that one of the most interesting usecases here is to delete the `kubeadmin-secret` from the managed-clusters.
   
    The capability to delete objects is enhanced by specifying a `prune-behaviour` so you can decide what should happen
-   with the objects once you delete a Policy. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies) 
+   with the objects once you delete a Policy. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies). 
 
 8. RHACM's Governance framework provides the option to group objects to certain sets (PolicySets), a feature which has both UI 
-   and Gitops-Support
-   - See how PolicySets can be configured using [PolicyGenerator:](https://github.com/stolostron/policy-collection/blob/main/policygenerator/policy-sets/community/openshift-plus/policyGenerator.yaml#L154)
+   and Gitops-Support.
+   - See how PolicySets can be configured using [PolicyGenerator](https://github.com/stolostron/policy-collection/blob/main/policygenerator/policy-sets/community/openshift-plus/policyGenerator.yaml#L154)
    - See an example of a PolicySet being stored in git by checking:
 
    ```
-   apiVersion: policy.open-cluster-management.io/v1beta1
-   kind: PolicySet
-     metadata:
-       name: certificates-policyset
-       namespace: cert-manager
-     spec:
-       description: "Grouping policies related to certificate handling"
-     policies:
-     - azure-clusterissuer-policy
-     - cert-manager-csv-policy
-     - certification-expiration-policy
+      apiVersion: policy.open-cluster-management.io/v1beta1
+      kind: PolicySet
+        metadata:
+          name: certificates-policyset
+          namespace: cert-manager
+        spec:
+          description: "Grouping policies related to certificate handling"
+        policies:
+        - azure-clusterissuer-policy
+        - cert-manager-csv-policy
+        - certification-expiration-policy
    ```
 
    - See how they look in the UI (examples taken from our [Kyverno-Policysets](https://github.com/stolostron/policy-collection/tree/main/policygenerator/policy-sets/community/kyverno)):
@@ -296,9 +293,12 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
 11. Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
 
-    See here example of our `build-in policy` which checks if backup is setup correctly:
+    See here for an overall Governance overview in RHACM-UI
+   ![Governance](images/governance.png)
+    
 
-  ![Backup Policy](images/backuprestore.png)
+    See here example of our `build-in policy` which checks if backup is setup correctly:
+   ![Backup Policy](images/backuprestore.png)
 
 
 12. Option to have less/or more fine grained checks by using Configuration-Policies
@@ -316,30 +316,30 @@ In the following we will list the advantages of deploying RHACM-Policies using A
     - you could use the previously discussed `evaluationInterval` to trigger an Ansible Job at a regular basis.
    
 14. Policies can be used to check for `expired` Certificates in different namespaces
-    Please review the following example:  
+    Please review the following example where a violation will be created if a certificate is valid for less than 100 hours:  
 
    ```
-   apiVersion: policy.open-cluster-management.io/v1
-   kind: CertificatePolicy
-   metadata:
-     name: certificate-policy-1
-     namespace: kube-system
-     label:
-       category: "System-Integrity"
-   spec:
-     # include are the namespaces you want to watch certificatepolicies in, while exclude are the namespaces you explicitly do not want to watch
-     namespaceSelector:
-       include: ["default", "kube-*"]
-       exclude: ["kube-system"]
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: CertificatePolicy
+      metadata:
+        name: certificate-policy-1
+        namespace: kube-system
+        label:
+          category: "System-Integrity"
+      spec:
+      # include are the namespaces you want to watch certificatepolicies in, while exclude are the namespaces you explicitly do not want to watch
+       namespaceSelector:
+         include: ["default", "kube-*"]
+         exclude: ["kube-system"]
      # Can be enforce or inform, however enforce doesn't do anything with regards to this controller
-     remediationAction: inform
+       remediationAction: inform
      # minimum duration is the least amount of time the certificate is still valid before it is considered non-compliant
-     minimumDuration: 100h
-```
+       minimumDuration: 100h
+   ```
 
    ### Running the example
 
-       All you need to do is executing this [example](https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/setuppolicies.yaml), execute it 2 times with some interval of ca 30 sec as  
+      For running the example all you need to do is executing this [example](https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/setuppolicies.yaml), execute it 2 times with some interval of ca 30 sec as  
    GitopsOperator might need to be installed first.
 
    The ArgoCD instance will be deployed in `policies namespace` and is configured to setup PolicyGenerator.
@@ -386,12 +386,12 @@ In the following we will list the advantages of deploying RHACM-Policies using A
       from `subdirectories` the following property `recurse: true` has to be present (unlike in the first two Applications).
 
    ```
-   source:
-     path: stable
-     repoURL: https://github.com/stolostron/policy-collection
-     targetRevision: HEAD
-     directory:
-       recurse: true # <--- Here
+      source:
+        path: stable
+        repoURL: https://github.com/stolostron/policy-collection
+        targetRevision: HEAD
+        directory:
+          recurse: true # <--- Here
    ```
 
    See some of the Policies being synced onto the Hub-Cluster using ArgoCD-Applications in the `Governance-View`.
@@ -439,6 +439,6 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    support customers becoming `compliant` from a technical point of view. It can be even seen as `ArgoCD extension to
    Governance`.  You get all the great benefits highlighted above out of the box.
    Both `sites` will provide further features in the future like enhanced `Operator` or `Dependency` Management.
-
+   We would like to get your feedback and thoughts on this topic.
 
 
