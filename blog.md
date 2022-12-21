@@ -1,14 +1,24 @@
 ## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
 
-Often we are getting asked by users/customers who are using or intending to use a `Gitops-Approach` about the relationship between `Gitops-Operator/ArgoCD` and `Red Hat Advanced Cluster Management's` (RHACM's)-Policies-Framework and if they can be used together. 
+In this blog, we are going to explore the relationship between OpenShift GitOps (Argo CD) and Red Hat Advanced Cluster Management's (RHACM's) policy framework and how they fit together.
+While RHACM is RedHat’s solution for Kubernetes `MultiClusterManagement` with a strong focus on governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just became the [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status at (CNCF) 
+In the following we will list the advantages of deploying RHACM-Policies using ArgoCD showing concrete examples.
 
-To start with:
-
-They are a `perfect` fit and you could even consider RHACM Governance as an Governance extension for existing ArgoCD users. In the following we will list the advantages of the integration by showing concrete examples.
 
 ## Advantages of using Policies with ArgoCD
 
-* RHACM-Policies can be used to install/configure Gitops-Operator/ArgoCD consistently either on the Hub or on Managed-Clusters. See an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
+RHACM-Policies can be used to install and configure Argo CD  consistently either on the Managing or on Managed-Clusters. See an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
+The Policy is marked as part of the `Baseline-Configuration` of the `NIST SP 800-53` standard and could certainly be part of any other standard you like to implement.
+
+```
+kind: Policy
+metadata:
+  name: openshift-gitops-installed
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+```
 
 as an example you could consistently overwrite the default Gitops-Instance
 
@@ -53,11 +63,11 @@ objectDefinition:
   metadata:
     name: copied-secret
     namespace: target
-
 ```
-Benefits of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you customize specific elements of a policy over various clusters within the fleet.
 
-See here an example how to create an ApplicationSet using TemplatizedPolicies approach:
+`Benefits` of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you customize specific elements of a policy over various clusters within the fleet.
+
+See here an example how to create an ApplicationSet using `TemplatizedPolicies` approach:
 
 ```
 apiVersion: policy.open-cluster-management.io/v1
@@ -196,7 +206,9 @@ spec:
   evaluationInterval:
   compliant: 10m
   noncompliant: 10s
-
+```
+or for one time jobs
+```
 spec.evaluationInterval.compliant: never
 ```
 
