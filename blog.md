@@ -73,79 +73,79 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    See here an example how to create an ApplicationSet using `TemplatizedPolicies` approach:
 
-   ```
-   apiVersion: policy.open-cluster-management.io/v1
-   kind: Policy
-   metadata:
-     name: policy-as-bootstrap-gitops
-     annotations:
-       policy.open-cluster-management.io/standards: NIST SP 800-53
-       policy.open-cluster-management.io/categories: CM Configuration Management
-       policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
-   spec:
-     remediationAction: enforce
-     disabled: false
-     policy-templates:
-       - objectDefinition:
-           apiVersion: policy.open-cluster-management.io/v1
-           kind: ConfigurationPolicy
-           metadata:
-             name: gitops-argocd-applicationset
-           spec:
-             remediationAction: inform  # will be overridden by remediationAction in parent policy
-             severity: high
-             object-templates:
-               - complianceType: mustonlyhave
-                 objectDefinition:
-                   apiVersion: argoproj.io/v1alpha1
-                   kind: ApplicationSet
-                   metadata:
-                     name: as-bootstrap-acm
-                     namespace: openshift-gitops
-                   spec:
-                     generators:
-                     - git:
-                         repoURL: https://gitlab.example.com/openshift/argocd-cluster-config.git
-                         revision: main
-                         files:
-                         - path: 'cluster-definitions/{{ fromClusterClaim "name" }}/cluster.json'
-                     template:
-                       metadata:
-                         name: 'ocp-{{ fromClusterClaim "name" }}-bootstrap-acm'
-                       spec:
-                         project: default
-                         source:
-                           repoURL: https://gitlab.example.com/openshift/argocd-cluster-config.git
-                           targetRevision: main
-                           path: "cluster-config/overlays/{{`{{cluster.name}}`}}"
-                         destination:
-                           server: https://kubernetes.default.svc
-                         syncPolicy:
-                           automated:
-                             prune: true
-                             selfHeal: true
-   ```
-
-4. There is the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces based on namespace `      names`, `labels` or `expressions`.
-
-   In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and          `expression` which gives you more flexibility on which namespaces you like to operate on:
-
-   ```
-   namespaceSelector:
-     matchLabels:
-       name: test2
-     matchExpressions:
-       key: name
-       operator: In
-       values: ["test1", "test2"]
+    ```
+    apiVersion: policy.open-cluster-management.io/v1
+    kind: Policy
+    metadata:
+      name: policy-as-bootstrap-gitops
+      annotations:
+        policy.open-cluster-management.io/standards: NIST SP 800-53
+        policy.open-cluster-management.io/categories: CM Configuration Management
+        policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+    spec:
+      remediationAction: enforce
+      disabled: false
+      policy-templates:
+        - objectDefinition:
+            apiVersion: policy.open-cluster-management.io/v1
+            kind: ConfigurationPolicy
+            metadata:
+              name: gitops-argocd-applicationset
+            spec:
+              remediationAction: inform  # will be overridden by remediationAction in parent policy
+              severity: high
+              object-templates:
+                - complianceType: mustonlyhave
+                  objectDefinition:
+                    apiVersion: argoproj.io/v1alpha1
+                    kind: ApplicationSet
+                    metadata:
+                      name: as-bootstrap-acm
+                      namespace: openshift-gitops
+                    spec:
+                      generators:
+                      - git:
+                          repoURL: https://gitlab.example.com/openshift/argocd-cluster-config.git
+                          revision: main
+                          files:
+                          - path: 'cluster-definitions/{{ fromClusterClaim "name" }}/cluster.json'
+                      template:
+                        metadata:
+                          name: 'ocp-{{ fromClusterClaim "name" }}-bootstrap-acm'
+                        spec:
+                          project: default
+                          source:
+                            repoURL: https://gitlab.example.com/openshift/argocd-cluster-config.git
+                            targetRevision: main
+                            path: "cluster-config/overlays/{{`{{cluster.name}}`}}"
+                          destination:
+                            server: https://kubernetes.default.svc
+                          syncPolicy:
+                            automated:
+                              prune: true
+                              selfHeal: true
     ```
 
-5. You have the capability to patch resources. This means if a Kubernetes-Object must contain certain values you specify          `musthave` in case you can tolerate other fields.
-   Else - if the object must match exactly - you must specify `mustonlyhave`.
+4.  There is the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces based on namespace `      names`, `labels` or `expressions`.
 
-   A often requested example is to disable the self-provisioner role from an existing OpenShift-Cluster:
+    In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and          `expression` which gives you more flexibility on which namespaces you like to operate on:
+
+    ```
+    namespaceSelector:
+      matchLabels:
+        name: test2
+      matchExpressions:
+        key: name
+        operator: In
+        values: ["test1", "test2"]
+    ```
+
+5.  You have the capability to patch resources. This means if a Kubernetes-Object must contain certain values you specify          `musthave` in case you can tolerate other fields.
+    Else - if the object must match exactly - you must specify `mustonlyhave`.
+
+    A often requested example is to disable the self-provisioner role from an existing OpenShift-Cluster:
    
-   ```
+    ```
         metadata:
           name: policy-remove-self-provisioner
         spec:
@@ -165,13 +165,13 @@ In the following we will list the advantages of deploying RHACM-Policies using A
                   apiGroup: rbac.authorization.k8s.io
                   kind: ClusterRole
                   name: self-provisioner
-   ```
+    ```
 
-6. We provide the option to just monitor resources instead of creating/patching them (`inform`, versus `enforce`). It is   
-   possible to monitor the status of `any` Kubernetes-Object.
-   In this case we check for namespaces in `terminating` status leading to a violation.
+6.  We provide the option to just monitor resources instead of creating/patching them (`inform`, versus `enforce`). It is   
+    possible to monitor the status of `any` Kubernetes-Object.
+    In this case we check for namespaces in `terminating` status leading to a violation.
 
-   ```
+    ```
     spec:
      remediationAction: inform
      severity: low
@@ -190,19 +190,17 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
 7. Similar to above we provide the option to `delete` certain objects, you would just set the `remediationAction` to `enforce`.
 
-   Please check here for more [examples](https://github.com/stolostron/governance-policy-framework/blob/main/doc/configuration- 
-   policy/README.md#basic-usage) regarding the previous points.
+   Please check here for more [examples](https://github.com/stolostron/governance-policy-framework/blob/main/doc/configuration-policy/README.md#basic-usage) regarding the previous points.
 
    Please note that one of the most interesting usecases here is to delete the `kubeadmin-secret` from the managed-clusters.
   
    The capability to delete objects is enhanced by specifying a `prune-behaviour` so you can decide what should happen
-   with the objects once you delete a Policy. Please review here [Prune Object Behavior]
-  (https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies) 
+   with the objects once you delete a Policy. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies) 
 
 8. RHACM's Governance framework provides the option to group objects to certain sets (PolicySets), a feature which has both UI 
    and Gitops-Support
-  - See how PolicySets can be configured using [PolicyGenerator:](https://github.com/stolostron/policy-collection/blob/main/policygenerator/policy-sets/community/openshift-plus/policyGenerator.yaml#L154)
-  - See an example of a PolicySet being stored in git by checking:
+   - See how PolicySets can be configured using [PolicyGenerator:](https://github.com/stolostron/policy-collection/blob/main/policygenerator/policy-sets/community/openshift-plus/policyGenerator.yaml#L154)
+   - See an example of a PolicySet being stored in git by checking:
 
    ```
    apiVersion: policy.open-cluster-management.io/v1beta1
@@ -218,7 +216,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
      - certification-expiration-policy
    ```
 
-   - See how they look in the UI (examples taken from our [Kyverno-Policysets](https://github.com/stolostron/policy-              collection/tree/main/policygenerator/policy-sets/community/kyverno)):
+   - See how they look in the UI (examples taken from our [Kyverno-Policysets](https://github.com/stolostron/policy-collection/tree/main/policygenerator/policy-sets/community/kyverno)):
 
 ![Kyverno-Policysets](images/policysets.png)
 
@@ -248,7 +246,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 10. You can use `PolicyGenerator` which also can be used for integration of Kyverno and Gatekeeper 
 
   `PolicyGenerator` can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via  
-  CustomTooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
+   CustomTooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
 
    Let's take the following example. You want to deploy the following resources together:
   
@@ -259,7 +257,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    - `Secret`: supply credentials to the component (often makes sense to make this templatized).
    - `NetworkPolicy`: restrict the component's attack surface.
 
-   So you could place all `yaml-files` into a folder, together with the `checks` like `deployment must be running` and you can    create a single Policy by just configure:
+   So you could place all `yaml-files` into a folder, together with the `checks` like `deployment must be running` and you can create a single Policy by just configure:
 
    ```
    policies:
@@ -422,7 +420,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
          - "*"
        kinds:
          - apiGroups: [""]
-           kinds: ["ReplicaSet", "Deployment", "Rollout"]
+           kinds: ["ReplicaSet", "Deployment"]
      parameters:
        message: "All resources must have a `argocd.argoproj.io/tracking-id` annotation."
        annotations:
