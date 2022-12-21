@@ -336,8 +336,8 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ```
 
    ### Running the example
-
-      For running the example all you need to do is executing this [example](https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/setuppolicies.yaml), execute it 2 times with some interval of ca 30 sec as  
+   
+   For running the example all you need to do is executing this [example](https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/setuppolicies.yaml), execute it 2 times with some interval of ca 30 sec as  
    GitopsOperator might need to be installed first.
 
    The ArgoCD instance will be deployed in `policies namespace` and is configured to setup PolicyGenerator.
