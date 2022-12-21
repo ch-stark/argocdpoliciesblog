@@ -126,9 +126,10 @@ In the following we will list the advantages of deploying RHACM-Policies using A
                               selfHeal: true
     ```
 
-4.  There is the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces based on namespace `      names`, `labels` or `expressions`.
+4.  There is the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces based on namespace  
+    `names`, `labels` or `expressions`.
 
-    In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and          `expression` which gives you more flexibility on which namespaces you like to operate on:
+    In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and           `expression` which gives you more flexibility on which namespaces you like to operate on:
 
     ```
     namespaceSelector:
@@ -140,7 +141,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
         values: ["test1", "test2"]
     ```
 
-5.  You have the capability to patch resources. This means if a Kubernetes-Object must contain certain values you specify          `musthave` in case you can tolerate other fields.
+5.  You have the capability to patch resources. This means if a Kubernetes-Object must contain certain values you specify           `musthave` in case you can tolerate other fields.
     Else - if the object must match exactly - you must specify `mustonlyhave`.
 
     A often requested example is to disable the self-provisioner role from an existing OpenShift-Cluster:
