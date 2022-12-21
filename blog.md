@@ -270,9 +270,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ```
 
    In the above all yaml-files would be used to generate a single Policy. 
-
    Please note that you can also generate Policies from folders which contain a `Kustomization`.
-   
    Let's check the following example-extract:
 
    ```
