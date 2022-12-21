@@ -33,7 +33,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
          value: <namespace to deploy to>
    ```
 
-   another example would be to configure [SSO](https://docs.openshift.com/container-platform/4.11/cicd/gitops/configuring-sso-    for-argo-cd-using-keycloak.html) for your fleet of Gitops-Instances
+   another example would be to configure [SSO](https://docs.openshift.com/container-platform/4.11/cicd/gitops/configuring-sso-for-argo-cd-using-keycloak.html) for your `fleet` of Gitops-Instances.
 
    ```
    spec:
