@@ -44,15 +44,15 @@ See here for an overall Governance overview in RHACM-UI
 * You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
 
 ```
-              objectDefinition:
-                apiVersion: v1
-                data:
-                  city: '{{hub fromSecret "" "hub-secret" "city" hub}}'
-                  state: '{{hub fromSecret "" "hub-secret" "state" hub}}'
-                kind: Secret
-                metadata:
-                  name: copied-secret
-                  namespace: target
+objectDefinition:
+  apiVersion: v1
+  data:
+    city: '{{hub fromSecret "" "hub-secret" "city" hub}}'
+    state: '{{hub fromSecret "" "hub-secret" "state" hub}}'
+  kind: Secret
+  metadata:
+    name: copied-secret
+    namespace: target
 
 ```
 Benefits of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you customize specific elements of a policy over various clusters within the fleet.
@@ -233,7 +233,26 @@ policies:
 
 In the above all yaml files would be used to generate a single Policy. 
 
+Please note that you can also generate Policies from folder which contain a Kustomization.
 
+Let's check the following example:
+
+This policy definition
+
+```
+policies:
+  - name: policy-gatekeeperlibrary
+    manifests:
+      - path: gatekeeperlibrary
+```
+points to
+
+```
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - https://github.com/open-policy-agent/gatekeeper-library/library
+```
 
 * Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
 
@@ -337,6 +356,33 @@ See some of the Policies being synced onto the Hub-Cluster using ArgoCD-Applicat
 ## Fixing the issues that ArgoCD gets out of sync
 
 A nice example how ArgoCD can be configured to optimize the interaction with RHACM-policies has been the following. It turned out that as the `RHACM-Policy-Controller` is copying policies into the namespace presenting a Managed-Cluster on the Hub and creating Configuration-Policies which will be copied onto the Managed-Clusters ArgoCD-Applications became out-of-sync. This can be fixed by setting the resource tracking method to [annotation](https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method) which is already included in the examples.
+
+Again you can benefit from ACM's Gatekeeper Integration
+
+```
+---
+# Require applications deploy with ArgoProj, ex demo-accept-app:/Service:secure/summer-k8s-service-canary
+# To use this, set Argo CD tracking method to annotation or annotation+label. https://argo-cd.readthedocs.io/en/stable/user-guide/resource_tracking/
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredAnnotations
+metadata:
+  name: must-be-deployed-by-argocd
+spec:
+  enforcementAction: deny
+  match:
+    namespaces:
+      - "*"
+    kinds:
+      - apiGroups: [""]
+        kinds: ["ReplicaSet", "Deployment", "Rollout"]
+  parameters:
+    message: "All resources must have a `argocd.argoproj.io/tracking-id` annotation."
+    annotations:
+      - key: argocd.argoproj.io/tracking-id
+        # Matches annotation format
+        allowedRegex: ^[a-zA-Z0-9-]+:.+$
+```
+
 
 ### Summary
 
