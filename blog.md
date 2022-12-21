@@ -40,17 +40,16 @@ In the following we will list the advantages of deploying RHACM-Policies using A
      sso:
        provider: keycloak
    ```
+   It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/ArgoCD` regardless if you have a  
+  `centralized` or `decentralized` approach. This means you can consistently rollout 
+   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are later difficult to troubleshoot.
 
 2. Using the `App-of-Apps` pattern you can e.g. have a root `Gitops-Operator/ArgoCD-Application` which deploys other
-   Applications. One of those child-apps could have the purpose to deploy Policies. 
+   Applications. One of those child-apps could have the purpose to deploy Policies to easily integrate the compliance aspect. 
    Please review this [blog](https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/) for a comprehensive example
    how to bootstrap an environment using Policies using this pattern.
 
-3. It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/ArgoCD` regardless if you have a  
-   `centralized` or `decentralized` approach. This means you can consistently rollout 
-   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are later difficult to troubleshoot. 
-  
-4. You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where 
+3. You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where 
    you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
 
    ```
@@ -67,7 +66,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    `Benefits` of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you     customize specific elements of a policy over various clusters within the fleet.
 
-    See here an example how to create an ApplicationSet using `TemplatizedPolicies` approach:
+    See here a `real world` example how to create an ApplicationSet using a `TemplatizedPolicies` approach:
 
    ```
     apiVersion: policy.open-cluster-management.io/v1
@@ -122,32 +121,32 @@ In the following we will list the advantages of deploying RHACM-Policies using A
                               selfHeal: true
     ```
 
-4.  There is the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces based on namespace  
-   `names`, `labels` or `expressions`.
+4.  RHACM Policy framework provides the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces
+    based on namespace `names`, `labels` or `expressions`.
 
     In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and          `expression` which gives you more flexibility on which namespaces you like to operate on:
 
     ```
-    namespaceSelector:
-      matchLabels:
-        name: test2
-      matchExpressions:
-        key: name
-        operator: In
-        values: ["test1", "test2"]
+       namespaceSelector:
+         matchLabels:
+           name: test2
+         matchExpressions:
+           key: name
+           operator: In
+           values: ["test1", "test2"]
     ```
 
-5.  You have the capability to patch resources. This means if a Kubernetes-Object must contain certain values you specify          `musthave` in case you can tolerate other fields.
+5.  You have the capability to patch resources. This means if a Kubernetes-Object `must` contain certain values you specify        `musthave` in case you can tolerate other fields.
     Else - if the object must match exactly - you must specify `mustonlyhave`.
 
-    A often requested example is to disable the self-provisioner role from an existing OpenShift-Cluster:
+    A often requested example is to disable the `self-provisioner role` from an existing or newly created OpenShift-Cluster:
    
     ```
         metadata:
           name: policy-remove-self-provisioner
         spec:
-          remediationAction: inform
-          severity: low
+          remediationAction: enforce
+          severity: high
           object-templates:
             - complianceType: mustonlyhave
               objectDefinition:
@@ -258,15 +257,15 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    create a single Policy by just configure:
 
    ```
-   policies:
-   # Deployment-Policy - start
-   - name: policy-deployment
-     categories:
-       - System-Configuration
-     controls: 
-       - ApplicatonDeployment
-     manifests:
-       - path: input/
+      policies:
+      # Deployment-Policy - start
+      - name: policy-deployment
+        categories:
+          - System-Configuration
+        controls: 
+          - ApplicatonDeployment
+        manifests:
+          - path: input/
    ```
 
    In the above all yaml-files would be used to generate a single Policy. 
@@ -274,18 +273,18 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    Let's check the following example-extract:
 
    ```
-   policies:
-     - name: policy-gatekeeperlibrary
-       manifests:
-         - path: gatekeeperlibrary
+      policies:
+        - name: policy-gatekeeperlibrary
+          manifests:
+            - path: gatekeeperlibrary
    ```
    points to
 
    ```
-   apiVersion: kustomize.config.k8s.io/v1beta1
-   kind: Kustomization
-   resources:
-     - https://github.com/open-policy-agent/gatekeeper-library/library     
+      apiVersion: kustomize.config.k8s.io/v1beta1
+      kind: Kustomization
+      resources:
+        - https://github.com/open-policy-agent/gatekeeper-library/library     
      
    ```
 
@@ -313,7 +312,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
     - you can invoke Ansible-Jobs from Policies so you could only invoke Ansible from critical policies
     - you could use the previously discussed `evaluationInterval` to trigger an Ansible Job at a regular basis.
    
-14. Policies can be used to check for `expired` Certificates in different namespaces
+14. Policies can be used to check for `expired` Certificates in different namespaces.
     Please review the following example where a violation will be created if a certificate is valid for less than 100 hours:  
 
    ```
@@ -343,36 +342,36 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    The ArgoCD instance will be deployed in `policies namespace` and is configured to setup PolicyGenerator.
 
    ```
-   repo:
-     resources:
-       limits:
-         cpu: '1'
-         memory: 512Mi
-       requests:
-         cpu: 250m
-         memory: 256Mi
-     env:
-     - name: KUSTOMIZE_PLUGIN_HOME
-       value: /etc/kustomize/plugin
-     initContainers:
-     - args:
-       - cp /etc/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/PolicyGenerator
-         /policy-generator/PolicyGenerator
-       command:
-       - sh
-       - -c
-       image: registry.redhat.io/rhacm2/multicluster-operators-subscription-rhel8:v2.6.2
-       name: policy-generator-install
-       volumeMounts:
-       - mountPath: /policy-generator
-         name: policy-generator
-     volumeMounts:
-     - mountPath: /etc/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator
-       name: policy-generator
-     volumes:
-     - emptyDir: {}
-       name: policy-generator
-   kustomizeBuildOptions: --enable-alpha-plugins
+      repo:
+        resources:
+          limits:
+            cpu: '1'
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        env:
+        - name: KUSTOMIZE_PLUGIN_HOME
+          value: /etc/kustomize/plugin
+        initContainers:
+        - args:
+          - cp /etc/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/PolicyGenerator
+            /policy-generator/PolicyGenerator
+          command:
+          - sh
+          - -c
+          image: registry.redhat.io/rhacm2/multicluster-operators-subscription-rhel8:v2.6.2
+          name: policy-generator-install
+          volumeMounts:
+          - mountPath: /policy-generator
+            name: policy-generator
+        volumeMounts:
+        - mountPath: /etc/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator
+          name: policy-generator
+        volumes:
+        - emptyDir: {}
+          name: policy-generator
+      kustomizeBuildOptions: --enable-alpha-plugins
    ```
 
   We deploy several Applications with only slighty different purposes:
@@ -399,11 +398,11 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    A nice example how ArgoCD can be configured to optimize the interaction with RHACM-policies has been the following. It   
    turned out that as the RHACM-Policy-Controller is copying Policies into a namespace (representing a managed cluster)
-   therefore ArgoCD-Applications became out-of-sync. This can be fixed by setting the resource tracking method to [annotation]
-   (https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method) which is already included in  
-   the examples.
+   therefore `ArgoCD-Applications` became `out-of-sync`. This can be fixed by setting the `resource tracking` method to
+   [annotation](https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method) which is already
+   included in the examples.
 
-   Again you can benefit from ACM's `Gatekeeper Integration` by using this `Gatekeeper-Constraint` together with 
+   Again you can benefit from RHACM's `Gatekeeper Integration` by using this `Gatekeeper-Constraint` together with 
    PolicyGenerator.
 
    ```
@@ -432,11 +431,10 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
 ### Summary
 
-   This overview had the purpose to explain why it is a good idea to use Policies together with GitOpsOperator/ArgoCD. Both    
-   approaches can heavily benefit from each other. Certainly it needs to be highlighted that the focus of RHACM-Policies is to 
-   support customers becoming `compliant` from a technical point of view. It can be even seen as `ArgoCD extension to
+   This overview had the purpose to explain why it is a good idea to use Policies together with `GitOpsOperator/ArgoCD`. Both      approaches can heavily benefit from each other. Certainly it needs to be highlighted that the focus of RHACM-Policies is to 
+   support customers becoming `compliant` from a technical point of view. It can be even seen as a `ArgoCD extension to
    Governance`.  You get all the great benefits highlighted above out of the box.
-   Both `sites` will provide further features in the future like enhanced `Operator` or `Dependency` Management.
-   We would like to get your feedback and thoughts on this topic.
+   Both `sites` will provide further features in the future like enhanced `Operator` or `Dependency` Management and we think of
+   further integratin possibilities. We would love to get your feedback and thoughts on this topic.
 
 
