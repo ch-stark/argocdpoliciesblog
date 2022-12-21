@@ -143,6 +143,30 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 5. You have the capability to patch resources. This means if a Kubernetes-Object must contain certain values you specify          `musthave` in case you can tolerate other fields.
    Else - if the object must match exactly - you must specify `mustonlyhave`.
 
+   A often requested example is to disable the self-provisioner role from an existing OpenShift-Cluster:
+   
+   ```
+        metadata:
+          name: policy-remove-self-provisioner
+        spec:
+          remediationAction: inform
+          severity: low
+          object-templates:
+            - complianceType: mustonlyhave
+              objectDefinition:
+                kind: ClusterRoleBinding
+                apiVersion: rbac.authorization.k8s.io/v1
+                metadata:
+                  name: self-provisioners
+                  annotations:
+                    rbac.authorization.kubernetes.io/autoupdate: 'false'
+                subjects: []
+                roleRef:
+                  apiGroup: rbac.authorization.k8s.io
+                  kind: ClusterRole
+                  name: self-provisioner
+   ```
+
 6. We provide the option to just monitor resources instead of creating/patching them (`inform`, versus `enforce`). It is   
    possible to monitor the status of `any` Kubernetes-Object.
    In this case we check for namespaces in `terminating` status leading to a violation.
@@ -194,12 +218,12 @@ In the following we will list the advantages of deploying RHACM-Policies using A
      - certification-expiration-policy
    ```
 
-  - See how they look in the UI (examples taken from our [Kyverno-Policysets](https://github.com/stolostron/policy-              collection/tree/main/policygenerator/policy-sets/community/kyverno)):
+   - See how they look in the UI (examples taken from our [Kyverno-Policysets](https://github.com/stolostron/policy-              collection/tree/main/policygenerator/policy-sets/community/kyverno)):
 
 ![Kyverno-Policysets](images/policysets.png)
 
-   See how the [OpenShift-Hardening-Policyset](https://github.com/stolostron/policy-collection/tree/main/policygenerator/policy-sets/community/openshift-hardening) looks like. You see some policies are   
-   compliant, some others are not and need investigation.
+   - See how the [OpenShift-Hardening-Policyset](https://github.com/stolostron/policy-collection/tree/main/policygenerator/policy-sets/community/openshift-hardening) looks like. You see some policies are   
+     compliant, some others are not and need investigation.
 
 ![OpenShift-Hardening](images/openshifthardening.png)
 
@@ -226,14 +250,14 @@ In the following we will list the advantages of deploying RHACM-Policies using A
   `PolicyGenerator` can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via  
   CustomTooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
 
-  Let's take the following example. You want to deploy the following resources together:
+   Let's take the following example. You want to deploy the following resources together:
   
-  - `Deployment`: define which image to run.
-  - `Service`: component can be reached over the network.
-  - `Ingress`: the outside world can access our Service.
-  - `ConfigMap`: configure the component (often makes sense to make this templatized).
-  - `Secret`: supply credentials to the component (often makes sense to make this templatized).
-  - `NetworkPolicy`: restrict the component's attack surface.
+   - `Deployment`: define which image to run.
+   - `Service`: component can be reached over the network.
+   - `Ingress`: the outside world can access our Service.
+   - `ConfigMap`: configure the component (often makes sense to make this templatized).
+   - `Secret`: supply credentials to the component (often makes sense to make this templatized).
+   - `NetworkPolicy`: restrict the component's attack surface.
 
    So you could place all `yaml-files` into a folder, together with the `checks` like `deployment must be running` and you can    create a single Policy by just configure:
 
@@ -251,7 +275,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    In the above all yaml files would be used to generate a single Policy. 
 
-   Please note that you can also generate Policies from folder which contain a Kustomization.
+   Please note that you can also generate Policies from folders which contain a `Kustomization`.
 
    Let's check the following example:
 
@@ -269,7 +293,8 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    apiVersion: kustomize.config.k8s.io/v1beta1
    kind: Kustomization
    resources:
-     - https://github.com/open-policy-agent/gatekeeper-library/library
+     - https://github.com/open-policy-agent/gatekeeper-library/library     
+     
    ```
 
 11. Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
@@ -306,9 +331,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
      namespaceSelector:
        include: ["default", "kube-*"]
        exclude: ["kube-system"]
-  # Can be enforce or inform, however enforce doesn't do anything with regards to this controller
+     # Can be enforce or inform, however enforce doesn't do anything with regards to this controller
      remediationAction: inform
-  # minimum duration is the least amount of time the certificate is still valid before it is considered non-compliant
+     # minimum duration is the least amount of time the certificate is still valid before it is considered non-compliant
      minimumDuration: 100h
 ```
 
@@ -352,7 +377,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    kustomizeBuildOptions: --enable-alpha-plugins
    ```
 
-  We deploy three Applications with only slighty different purposes:
+  We deploy several Applications with only slighty different purposes:
 
    - `Application 1` deploys a `stable` (means supported)-PolicySet in order to harden RHACM. PolicyGenerator is used.
    - `Application 2` deploys a custom PolicySet e.g. for Configuration-Purposes. It contains one policy and is designed to be   
@@ -379,7 +404,8 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    sync. This can be fixed by setting the resource tracking method to [annotation](https://argocd-
    operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method) which is already included in the examples.
 
-   Again you can benefit from ACM's Gatekeeper Integration by using this Gatekeeper-Contraint together with PolicyGenerator
+   Again you can benefit from ACM's `Gatekeeper Integration` by using this `Gatekeeper-Contraint` together with 
+   PolicyGenerator.
 
    ```
    ---
@@ -409,9 +435,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 ### Summary
 
    This overview had the purpose to explain why it is a good idea to use Policies together with GitOpsOperator/ArgoCD. Both    
-   approaches can heavily benefit from each other.  Certainly it needs to be highlighted that the focus of RHACM-Policies is to 
-   support customers becoming `compliant` from a technical point of view. It can be even seen as ArgoCD extension to
-   Governance.  You get all the great benefits highlighted above out of the box.
+   approaches can heavily benefit from each other. Certainly it needs to be highlighted that the focus of RHACM-Policies is to 
+   support customers becoming `compliant` from a technical point of view. It can be even seen as `ArgoCD extension to
+   Governance`.  You get all the great benefits highlighted above out of the box.
    Both `sites` will provide further features in the future like enhanced `Operator` or `Dependency` Management.
 
 
