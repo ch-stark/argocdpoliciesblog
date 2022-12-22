@@ -64,7 +64,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
       apiVersion: cluster.open-cluster-management.io/v1beta1
       kind: Placement
       metadata:
-        name: example0placement
+        name: example-placement
       spec:
         predicates:
         - requiredClusterSelector:
@@ -169,7 +169,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    `ConfigMap` into several namespace or only into the namespaces with a certain name or label.
 
 
-4.  You have the capability to merge of patch resources. This means if a Kubernetes-Object `must` contain certain values you
+4.  You have the capability to merge or patch resources. This means if a Kubernetes-Object `must` contain certain values you
     specify `musthave` in case you can tolerate other fields.
     Else - if the object must match exactly - you must specify `mustonlyhave`.
 
@@ -225,7 +225,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    Please note that one of the most interesting usecases here is to delete the `kubeadmin-secret` from the managed-clusters.
   
-   The capability to delete objects is enhanced by specifying a `prune-behaviour` so you can decide what should happen
+   The capability to delete objects is enhanced by specifying a `prune-behavior` so you can decide what should happen
    with the objects once you delete a Policy. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies). 
 
 7. RHACM's Governance framework provides the option to group objects to certain sets (`PolicySets`), a feature which has both
@@ -298,7 +298,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
         categories:
           - System-Configuration
         controls: 
-          - ApplicatonDeployment
+          - ApplicationDeployment
         manifests:
           - path: input/
    ```
@@ -351,7 +351,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
     Those topics have already been explained in several blogs which can be found [here](https://github.com/stolostron/policy-collection/tree/main/blogs) just to summarize:
   
-    - you can give Policies a `severity` sending alerts via `RHACM's Obvervability` framework only from high-prio policies
+    - you can give Policies a `severity` sending alerts via `RHACM's Observability` framework only from high-prio policies
     - you can invoke Ansible-Jobs from Policies so you could only invoke Ansible from critical policies
     - you could use the previously discussed `evaluationInterval` to trigger an Ansible Job at a regular basis.
    
@@ -367,7 +367,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
         label:
           category: "System-Integrity"
       spec:
-      # include are the namespaces you want to watch certificatepolicies in, while exclude are the namespaces you explicitly do not want to watch
+      # include are the namespaces you want to watch certificate policies in, while exclude are the namespaces you explicitly do not want to watch
        namespaceSelector:
          include: ["default", "kube-*"]
          exclude: ["kube-system"]
@@ -478,6 +478,6 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    support customers becoming `compliant` from a technical point of view. It can be even seen as a `ArgoCD extension to
    Governance`.  You get all the great benefits highlighted above out of the box.
    Both `sites` will provide further features in the future like enhanced `Operator` or `Dependency` Management and we think of
-   further integratin possibilities. We would love to get your feedback and thoughts on this topic.
+   further integration possibilities. We would love to get your feedback and thoughts on this topic.
 
 
