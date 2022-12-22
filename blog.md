@@ -44,8 +44,8 @@ In the following we will list the advantages of deploying RHACM-Policies using A
   `centralized` or `decentralized` approach. This means you can consistently rollout 
    the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are later difficult to troubleshoot.
    
-   This will be achieved by the following objects. Especially by configuring the Placement-Object you can decide on which 
-   Clusters the Policies should be effective.
+   This will be achieved by the following objects. Especially by configuring the `Placement-Object` you can decide on which 
+   `Clusters` the Policies should be applied.
    
    ```
       apiVersion: policy.open-cluster-management.io/v1
