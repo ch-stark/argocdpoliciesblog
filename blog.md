@@ -291,6 +291,14 @@ In the following we will list the advantages of deploying RHACM-Policies using A
      
    ```
 
+   ### Migrate from PlacementRules to Placement using PolicyGenerator
+      
+   Another nice feature of `PolicyGenerator` is that it helps you to upgrade from `PlacementRules` to the new `Placement-API`.
+   You see in above file that there is both the option to set a `PlacementRule` or a `Placement`. You can either specify a name
+   (when the object already exists in the Cluster) or a path in the Gitrepo to apply the objects. See:  
+   placementPath,placementName or placementRulePath and placementRuleName in the reference file [here](https://github.com/stolostron/policy-generator-plugin/blob/main/docs/policygenerator-reference.yaml).
+
+
 11. Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
 
     See here for an overall Governance overview in RHACM-UI
