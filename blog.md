@@ -13,7 +13,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ```
    kind: Policy
    metadata:
-     name: openshift-gitops-installed
+     name: example-policy
      annotations:
        policy.open-cluster-management.io/standards: NIST SP 800-53
        policy.open-cluster-management.io/categories: CM Configuration Management
@@ -43,13 +43,43 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/ArgoCD` regardless if you have a  
   `centralized` or `decentralized` approach. This means you can consistently rollout 
    the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are later difficult to troubleshoot.
+   
+   This will be achieved by the following objects. Especially by configuring the Placement-Object you can decide on which 
+   Clusters the Policies should be effective.
+   
+   ```
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: PlacementBinding
+      metadata:
+        name: example-binding
+      placementRef:
+        apiGroup: cluster.open-cluster-management.io
+        kind: Placement
+        name: example-placement
+      subjects:
+      - apiGroup: policy.open-cluster-management.io
+        kind: Policy
+        name: example-policy
+      ---
+      apiVersion: cluster.open-cluster-management.io/v1beta1
+      kind: Placement
+      metadata:
+        name: example0placement
+      spec:
+        predicates:
+        - requiredClusterSelector:
+          labelSelector:
+            matchExpressions: []
+     ---
+     apiVersion: cluster.open-cluster-management.io/v1beta1
+     kind: PlacementDecision
+     metadata:
+       name: example-policy-plr-1
+       labels:
+         cluster.open-cluster-management.io/placement: destinationcluster
+   ```    
 
-2. Using the `App-of-Apps` pattern you can e.g. have a root `Gitops-Operator/ArgoCD-Application` which deploys other
-   Applications. One of those child-apps could have the purpose to deploy Policies to easily integrate the compliance aspect. 
-   Please review this [blog](https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/) for a comprehensive example
-   how to bootstrap an environment using Policies using this pattern.
-
-3. You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where 
+2. You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where 
    you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
 
    ```
@@ -121,7 +151,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
                               selfHeal: true
     ```
 
-4.  RHACM Policy framework provides the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces
+3.  RHACM Policy framework provides the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces
     based on namespace `names`, `labels` or `expressions`.
 
     In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and          `expression` which gives you more flexibility on which namespaces you like to operate on:
@@ -139,7 +169,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    `ConfigMap` into several namespace.
 
 
-5.  You have the capability to merge of patch resources. This means if a Kubernetes-Object `must` contain certain values you
+4.  You have the capability to merge of patch resources. This means if a Kubernetes-Object `must` contain certain values you
     specify `musthave` in case you can tolerate other fields.
     Else - if the object must match exactly - you must specify `mustonlyhave`.
 
@@ -168,7 +198,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
                   name: self-provisioner
     ```
 
-6.  We provide the option to just monitor resources instead of creating/patching them (can be configured via `inform`, versus
+5.  We provide the option to just monitor resources instead of creating/patching them (can be configured via `inform`, versus
     `enforce`). It is possible to monitor the status of `any` Kubernetes-Object.
     In the following case we check for namespaces in `terminating` status.
 
@@ -189,7 +219,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    ![Check Terminating](images/policy-terminating.png)
 
-7. Similar to above we provide the option to `delete` certain objects, you would just set the `remediationAction` to `enforce`.
+6. Similar to above we provide the option to `delete` certain objects, you would just set the `remediationAction` to `enforce`.
 
    Please check here for more [examples](https://github.com/stolostron/governance-policy-framework/blob/main/doc/configuration-policy/README.md#basic-usage) regarding the previous points.
 
@@ -198,7 +228,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    The capability to delete objects is enhanced by specifying a `prune-behaviour` so you can decide what should happen
    with the objects once you delete a Policy. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies). 
 
-8. RHACM's Governance framework provides the option to group objects to certain sets (`PolicySets`), a feature which has both
+7. RHACM's Governance framework provides the option to group objects to certain sets (`PolicySets`), a feature which has both
    UI and Gitops-Support.
    - See how `PolicySets` can be configured using [PolicyGenerator](https://github.com/stolostron/policy-collection/blob/main/policygenerator/policy-sets/community/openshift-plus/policyGenerator.yaml#L154)
    - See an example of a `PolicySet` being stored in git by checking:
@@ -227,7 +257,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 ![OpenShift-Hardening](images/openshifthardening.png)
 
 
-9. You have the possibility to configure how often checks should be evaluated considering the current status of an evaluated  
+8. You have the possibility to configure how often checks should be evaluated considering the current status of an evaluated  
    Object.
 
    ```
@@ -244,7 +274,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    The above example stops evaluating the policy once it is in compliant state. So it enforces it only once.
    The feature has mainly the advantage to tune environments with many policies to consume less resources.
 
-10. You can use `PolicyGenerator` which also can be used for integration of `Kyverno` and `Gatekeeper`. 
+9. You can use `PolicyGenerator` which also can be used for integration of `Kyverno` and `Gatekeeper`. 
 
   `PolicyGenerator` can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via  
    Custom Tooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
@@ -301,7 +331,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    placementPath,placementName or placementRulePath and placementRuleName in the reference file [here](https://github.com/stolostron/policy-generator-plugin/blob/main/docs/policygenerator-reference.yaml).
 
 
-11. Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
+10. Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
 
     See here for an overall Governance overview in RHACM-UI
    ![Governance](images/governance.png)
@@ -311,13 +341,13 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ![Backup Policy](images/backuprestore.png)
 
 
-12. Option to have less or more fine grained checks by using Configuration-Policies
+11. Option to have less or more fine grained checks by using Configuration-Policies
 
     This means you can create one `Configuration Policy` for every single Kubernetes-Object or bundle many of them. Each 
    `Configuration Policy` will be one unit when it comes to check the status in the UI as you see in the screenshot above.
     Benefit is that it gives you more flexibility when developing custom checks. 
 
-13. Monitoring- and Ansible-integration (gives you the option to implement `Automated Governance`)
+12. Monitoring- and Ansible-integration (gives you the option to implement `Automated Governance`)
 
     Those topics have already been explained in several blogs which can be found [here](https://github.com/stolostron/policy-collection/tree/main/blogs) just to summarize:
   
@@ -325,7 +355,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
     - you can invoke Ansible-Jobs from Policies so you could only invoke Ansible from critical policies
     - you could use the previously discussed `evaluationInterval` to trigger an Ansible Job at a regular basis.
    
-14. Policies can be used to check for `expired` Certificates in different namespaces.
+13. Policies can be used to check for `expired` Certificates in different namespaces.
     Please review the following example where a violation will be created if a certificate is valid for less than 100 hours:  
 
    ```
