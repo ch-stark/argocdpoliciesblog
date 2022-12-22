@@ -139,10 +139,12 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    `ConfigMap` into several namespace.
 
 
-5.  You have the capability to patch resources. This means if a Kubernetes-Object `must` contain certain values you specify        `musthave` in case you can tolerate other fields.
+5.  You have the capability to merge of patch resources. This means if a Kubernetes-Object `must` contain certain values you
+    specify `musthave` in case you can tolerate other fields.
     Else - if the object must match exactly - you must specify `mustonlyhave`.
 
-    A often requested example is to disable the `self-provisioner role` from an existing or newly created OpenShift-Cluster:
+    A often requested example for `mustonlyhave` is to disable the `self-provisioner role` from an existing or newly created
+    OpenShift-Cluster:
    
     ```
         metadata:
@@ -309,11 +311,11 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ![Backup Policy](images/backuprestore.png)
 
 
-12. Option to have less/or more fine grained checks by using Configuration-Policies
+12. Option to have less or more fine grained checks by using Configuration-Policies
 
     This means you can create one `Configuration Policy` for every single Kubernetes-Object or bundle many of them. Each 
    `Configuration Policy` will be one unit when it comes to check the status in the UI as you see in the screenshot above.
-    Benefit is that it gives you more flexibility. 
+    Benefit is that it gives you more flexibility when developing custom checks. 
 
 13. Monitoring- and Ansible-integration (gives you the option to implement `Automated Governance`)
 
