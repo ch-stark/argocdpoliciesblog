@@ -166,7 +166,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
            values: ["test1", "test2"]
     ```
     Benefit of this feature is that it reduces significantly the Policies you need to configure, e.g. when you want to copy a
-   `ConfigMap` into several namespace.
+   `ConfigMap` into several namespace or only into the namespaces with a certain name or label.
 
 
 4.  You have the capability to merge of patch resources. This means if a Kubernetes-Object `must` contain certain values you
