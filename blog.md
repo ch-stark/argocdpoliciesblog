@@ -405,7 +405,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    See some of the Policies being synced onto the Hub-Cluster using ArgoCD-Applications in the `Governance-View`.
    ![Governance-View](images/policies_from_argo.png)
 
-## Fixing the issues that ArgoCD gets out of sync
+## Fixing the issues that ArgoCD gets out of sync and monitoring the solution
 
    A nice example how ArgoCD can be configured to optimize the interaction with RHACM-policies has been the following. It   
    turned out that as the RHACM-Policy-Controller is copying Policies into a namespace (representing a managed cluster)
