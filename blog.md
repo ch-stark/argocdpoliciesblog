@@ -20,7 +20,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
        policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
    ```
 
-   as an example you could consistently overwrite the default Gitops-Instance
+   as an example you could consistently overwrite the default Gitops-Instance in all your namespaces and environments.
 
    ```
    spec:
