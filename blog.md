@@ -196,10 +196,10 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    The capability to delete objects is enhanced by specifying a `prune-behaviour` so you can decide what should happen
    with the objects once you delete a Policy. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies). 
 
-8. RHACM's Governance framework provides the option to group objects to certain sets (PolicySets), a feature which has both UI 
-   and Gitops-Support.
-   - See how PolicySets can be configured using [PolicyGenerator](https://github.com/stolostron/policy-collection/blob/main/policygenerator/policy-sets/community/openshift-plus/policyGenerator.yaml#L154)
-   - See an example of a PolicySet being stored in git by checking:
+8. RHACM's Governance framework provides the option to group objects to certain sets (`PolicySets`), a feature which has both
+   UI and Gitops-Support.
+   - See how `PolicySets` can be configured using [PolicyGenerator](https://github.com/stolostron/policy-collection/blob/main/policygenerator/policy-sets/community/openshift-plus/policyGenerator.yaml#L154)
+   - See an example of a `PolicySet` being stored in git by checking:
 
    ```
       apiVersion: policy.open-cluster-management.io/v1beta1
