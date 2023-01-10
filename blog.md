@@ -109,7 +109,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
           defaultRequest:
             memory: '{{hub fromConfigMap "" "app-box-config"  (printf "%s-memory-request" .ManagedClusterName) hub}}'
           type: Container
-   ---
+      ---
       apiVersion: v1
       kind: ResourceQuota
       metadata:
