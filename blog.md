@@ -1,7 +1,7 @@
 ## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
 
 In this blog, we are going to explore the relationship between OpenShift GitOps (Argo CD) and Red Hat Advanced Cluster Management's (RHACM's) policy framework and how they fit together.
-While RHACM is RedHat’s solution for Kubernetes `MultiClusterManagement` with a strong focus on governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just reached CNCF's [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status. 
+While RHACM is RedHat’s solution for Kubernetes `MultiClusterManagement` with a strong focus on Governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just reached CNCF's [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status. 
 In the following we will list the advantages of deploying RHACM-Policies using Argo CD showing concrete examples.
 
 
@@ -11,34 +11,34 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    The Policy is marked as part of the `Baseline-Configuration` of the `NIST SP 800-53` standard and could certainly be part of    any other standard you like to implement.
 
    ```
-   kind: Policy
-   metadata:
-     name: example-policy
-     annotations:
-       policy.open-cluster-management.io/standards: NIST SP 800-53
-       policy.open-cluster-management.io/categories: CM Configuration Management
-       policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+      kind: Policy
+      metadata:
+        name: example-policy
+        annotations:
+          policy.open-cluster-management.io/standards: NIST SP 800-53
+          policy.open-cluster-management.io/categories: CM Configuration Management
+          policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
    ```
 
    as an example you could consistently overwrite the default Gitops-Instance in all your namespaces and environments.
 
    ```
-   spec:
-     channel: stable
-     config:
-       env:
-       - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
-         value: "true"
-       - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
-         value: <namespace to deploy to>
+      spec:
+        channel: stable
+        config:
+          env:
+          - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
+            value: "true"
+          - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+            value: <namespace to deploy to>
    ```
 
    another example would be to configure [SSO](https://docs.openshift.com/container-platform/4.11/cicd/gitops/configuring-sso-for-argo-cd-using-keycloak.html) for your `fleet` of Gitops-Instances.
 
    ```
-   spec:
-     sso:
-       provider: keycloak
+      spec:
+        sso:
+          provider: keycloak
    ```
    It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/ArgoCD` regardless if you have a  
   `centralized` or `decentralized` approach. This means you can consistently rollout 
@@ -70,85 +70,115 @@ In the following we will list the advantages of deploying RHACM-Policies using A
         - requiredClusterSelector:
           labelSelector:
             matchExpressions: []
-     ---
-     apiVersion: cluster.open-cluster-management.io/v1beta1
-     kind: PlacementDecision
-     metadata:
-       name: example-policy-plr-1
-       labels:
-         cluster.open-cluster-management.io/placement: destinationcluster
+      ---
+      # this object is generated after the evaluation of the rules
+      apiVersion: cluster.open-cluster-management.io/v1beta1
+      kind: PlacementDecision
+      metadata:
+        name: example-policy-plr-1
+        labels:
+          cluster.open-cluster-management.io/placement: destinationcluster
    ```    
 
 2. You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where 
    you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
 
    ```
-   objectDefinition:
-     apiVersion: v1
-     data:
-       city: '{{hub fromSecret "" "hub-secret" "city" hub}}'
-       state: '{{hub fromSecret "" "hub-secret" "state" hub}}'
-     kind: Secret
-     metadata:
-       name: copied-secret
-       namespace: target
+      objectDefinition:
+        apiVersion: v1
+        data:
+          city: '{{hub fromSecret "" "hub-secret" "city" hub}}'
+          state: '{{hub fromSecret "" "hub-secret" "state" hub}}'
+        kind: Secret
+        metadata:
+          name: copied-secret
+          namespace: target
    ```
+   The following example shows you how to dynamically configure `mem-limit-range` and `ResourceQuota`:
 
+   ```
+      apiVersion: v1
+      kind: LimitRange
+      metadata:
+        name: mem-limit-range
+        namespace: '{{hub fromConfigMap "" "app-box-config"  (printf "%s-namespace" .ManagedClusterName) hub}}'
+      spec:
+        limits:
+        - default:
+            memory: '{{hub fromConfigMap "" "app-box-config"  (printf "%s-memory-limit" .ManagedClusterName) hub}}'
+          defaultRequest:
+            memory: '{{hub fromConfigMap "" "app-box-config"  (printf "%s-memory-request" .ManagedClusterName) hub}}'
+          type: Container
+   ---
+      apiVersion: v1
+      kind: ResourceQuota
+      metadata:
+        name: compute-resources
+        namespace: '{{hub fromConfigMap "" "app-box-config"  (printf "%s-namespace" .ManagedClusterName) hub}}'
+      spec:
+        hard:
+          requests.cpu: "1"
+          requests.memory: 1Gi
+          limits.cpu: "2"
+          limits.memory: 2Gi
+          requests.nvidia.com/gpu: 4
+   ```
+   
    `Benefits` of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you     customize specific elements of a policy over various clusters within the fleet.
 
     See here a `real world` example how to create an ApplicationSet using a `TemplatizedPolicies` approach:
 
    ```
-    apiVersion: policy.open-cluster-management.io/v1
-    kind: Policy
-    metadata:
-      name: policy-as-bootstrap-gitops
-      annotations:
-        policy.open-cluster-management.io/standards: NIST SP 800-53
-        policy.open-cluster-management.io/categories: CM Configuration Management
-        policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
-    spec:
-      remediationAction: enforce
-      disabled: false
-      policy-templates:
-        - objectDefinition:
-            apiVersion: policy.open-cluster-management.io/v1
-            kind: ConfigurationPolicy
-            metadata:
-              name: gitops-argocd-applicationset
-            spec:
-              remediationAction: inform  # will be overridden by remediationAction in parent policy
-              severity: high
-              object-templates:
-                - complianceType: mustonlyhave
-                  objectDefinition:
-                    apiVersion: argoproj.io/v1alpha1
-                    kind: ApplicationSet
-                    metadata:
-                      name: as-bootstrap-acm
-                      namespace: openshift-gitops
-                    spec:
-                      generators:
-                      - git:
-                          repoURL: https://gitlab.example.com/openshift/argocd-cluster-config.git
-                          revision: main
-                          files:
-                          - path: 'cluster-definitions/{{ fromClusterClaim "name" }}/cluster.json'
-                      template:
-                        metadata:
-                          name: 'ocp-{{ fromClusterClaim "name" }}-bootstrap-acm'
-                        spec:
-                          project: default
-                          source:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: Policy
+      metadata:
+        name: policy-as-bootstrap-gitops
+        annotations:
+          policy.open-cluster-management.io/standards: NIST SP 800-53
+          policy.open-cluster-management.io/categories: CM Configuration Management
+          policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+      spec:
+        remediationAction: enforce
+        disabled: false
+        policy-templates:
+          - objectDefinition:
+              apiVersion: policy.open-cluster-management.io/v1
+              kind: ConfigurationPolicy
+              metadata:
+                name: gitops-argocd-applicationset
+              spec:
+                remediationAction: inform  # will be overridden by remediationAction in parent policy
+                severity: high
+                object-templates:
+                  - complianceType: mustonlyhave
+                    objectDefinition:
+                      apiVersion: argoproj.io/v1alpha1
+                      kind: ApplicationSet
+                      metadata:
+                        name: as-bootstrap-acm
+                        namespace: openshift-gitops
+                      spec:
+                        generators:
+                        - git:
                             repoURL: https://gitlab.example.com/openshift/argocd-cluster-config.git
-                            targetRevision: main
-                            path: "cluster-config/overlays/{{`{{cluster.name}}`}}"
-                          destination:
-                            server: https://kubernetes.default.svc
-                          syncPolicy:
-                            automated:
-                              prune: true
-                              selfHeal: true
+                            revision: main
+                            files:
+                            - path: 'cluster-definitions/{{ fromClusterClaim "name" }}/cluster.json'
+                        template:
+                          metadata:
+                            name: 'ocp-{{ fromClusterClaim "name" }}-bootstrap-acm'
+                          spec:
+                            project: default
+                            source:
+                              repoURL: https://gitlab.example.com/openshift/argocd-cluster-config.git
+                              targetRevision: main
+                              path: "cluster-config/overlays/{{`{{cluster.name}}`}}"
+                            destination:
+                              server: https://kubernetes.default.svc
+                            syncPolicy:
+                              automated:
+                                prune: true
+                                selfHeal: true
     ```
 
 3.  RHACM Policy framework provides the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces
@@ -225,7 +255,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    Please note that one of the most interesting usecases here is to delete the `kubeadmin-secret` from the managed-clusters.
   
-   The capability to delete objects is enhanced by specifying a `prune-behavior` so you can decide what should happen
+   The capability to delete objects is enhanced by specifying a `prune-object-behavior` so you can decide what should happen
    with the objects once you delete a Policy. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies). 
 
 7. RHACM's Governance framework provides the option to group objects to certain sets (`PolicySets`), a feature which has both
@@ -261,14 +291,14 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    Object.
 
    ```
-   spec:
-     evaluationInterval:
-     compliant: 10m
-     noncompliant: 10s
+      spec:
+        evaluationInterval:
+        compliant: 10m
+        noncompliant: 10s
    ```
    or for one time jobs
    ```
-   spec.evaluationInterval.compliant: never
+      spec.evaluationInterval.compliant: never
    ```
 
    The above example stops evaluating the policy once it is in compliant state. So it enforces it only once.
@@ -445,39 +475,37 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    [annotation](https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method) which is already
    included in the examples.
 
-   Again you can benefit from RHACM's `Gatekeeper Integration` by using this `Gatekeeper-Constraint` together with 
+   For monitoring you can benefit from RHACM's `Gatekeeper Integration` by using this `Gatekeeper-Constraint` together with 
    PolicyGenerator.
 
    ```
-   ---
-   # Require applications deploy with ArgoProj, ex demo-accept-app:/Service:secure/summer-k8s-service-canary
-   # To use this, set Argo CD tracking method to annotation or annotation+label. https://argo-cd.readthedocs.io/en/stable/user-      guide/resource_tracking/
-   apiVersion: constraints.gatekeeper.sh/v1beta1
-   kind: K8sRequiredAnnotations
-   metadata:
-     name: must-be-deployed-by-argocd
-   spec:
-     enforcementAction: deny
-     match:
-       namespaces:
-         - "*"
-       kinds:
-         - apiGroups: [""]
-           kinds: ["ReplicaSet", "Deployment"]
-     parameters:
-       message: "All resources must have a `argocd.argoproj.io/tracking-id` annotation."
-       annotations:
-         - key: argocd.argoproj.io/tracking-id
-           # Matches annotation format
-           allowedRegex: ^[a-zA-Z0-9-]+:.+$
+      ---
+      # Require applications deploy with ArgoProj
+      # To use this, set Argo CD tracking method to annotation or annotation+label. https://argo-cd.readthedocs.io/en/stable/user-      guide/resource_tracking/
+      apiVersion: constraints.gatekeeper.sh/v1beta1
+      kind: K8sRequiredAnnotations
+      metadata:
+        name: must-be-deployed-by-argocd
+      spec:
+        enforcementAction: deny
+        match:
+          namespaces:
+            - "*"
+          kinds:
+            - apiGroups: [""]
+              kinds: ["ReplicaSet", "Deployment"]
+        parameters:
+          message: "All resources must have a `argocd.argoproj.io/tracking-id` annotation."
+          annotations:
+            - key: argocd.argoproj.io/tracking-id
+              # Matches annotation format
+              allowedRegex: ^[a-zA-Z0-9-]+:.+$
    ```
 
 ### Summary
 
    This overview had the purpose to explain why it is a good idea to use Policies together with `GitOpsOperator/ArgoCD`. Both      approaches can heavily benefit from each other. Certainly it needs to be highlighted that the focus of RHACM-Policies is to 
    support customers becoming `compliant` from a technical point of view. It can be even seen as a `ArgoCD extension to
-   Governance`.  You get all the great benefits highlighted above out of the box.
+   Governance`. You get all the great benefits highlighted above out of the box.
    Both `sites` will provide further features in the future like enhanced `Operator` or `Dependency` Management and we think of
    further integration possibilities. We would love to get your feedback and thoughts on this topic.
-
-
