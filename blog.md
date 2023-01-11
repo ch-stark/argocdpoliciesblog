@@ -94,7 +94,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
           name: copied-secret
           namespace: target
    ```
-   The following example shows you how to dynamically configure `mem-limit-range` and `ResourceQuota`:
+   The following example shows you how to dynamically configure a `LimitRange` and a `ResourceQuota`:
 
    ```
       apiVersion: v1
