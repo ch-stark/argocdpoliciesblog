@@ -1,7 +1,7 @@
 ## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
 
 In this blog, we are going to explore the relationship between OpenShift GitOps (Argo CD) and Red Hat Advanced Cluster Management's (RHACM's) policy framework and how they fit together.
-While RHACM is RedHat’s solution for Kubernetes `MultiClusterManagement` with a strong focus on Governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just reached CNCF's [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status. 
+While RHACM is Red Hat’s solution for Kubernetes `MultiClusterManagement` with a strong focus on Governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just reached CNCF's [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status. 
 In the following we will list the advantages of deploying RHACM-Policies using Argo CD showing concrete examples.
 
 
@@ -94,6 +94,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
           name: copied-secret
           namespace: target
    ```
+
    The following example shows you how to dynamically configure a `LimitRange` and a `ResourceQuota`:
 
    ```
@@ -358,12 +359,12 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    Another nice feature of `PolicyGenerator` is that it helps you to upgrade from `PlacementRules` to the new `Placement-API`.
    You see in above file that there is both the option to set a `PlacementRule` or a `Placement`. You can either specify a name
    (when the object already exists in the Cluster) or a path in the Gitrepo to apply the objects. See:  
-   placementPath,placementName or placementRulePath and placementRuleName in the reference file [here](https://github.com/stolostron/policy-generator-plugin/blob/main/docs/policygenerator-reference.yaml).
+   `placementPath`,`placementName` or `placementRulePath` and `placementRuleName` in the reference file [here](https://github.com/stolostron/policy-generator-plugin/blob/main/docs/policygenerator-reference.yaml).
 
 
 10. Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
 
-    See here for an overall Governance overview in RHACM-UI
+    See here for an overall Governance overview in RHACM-UI:
    ![Governance](images/governance.png)
     
 
@@ -371,13 +372,13 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ![Backup Policy](images/backuprestore.png)
 
 
-11. Option to have less or more fine grained checks by using Configuration-Policies
+11. Option to have less or more fine grained checks by using Configuration-Policies.
 
     This means you can create one `Configuration Policy` for every single Kubernetes-Object or bundle many of them. Each 
    `Configuration Policy` will be one unit when it comes to check the status in the UI as you see in the screenshot above.
     Benefit is that it gives you more flexibility when developing custom checks. 
 
-12. Monitoring- and Ansible-integration (gives you the option to implement `Automated Governance`)
+12. Monitoring- and Ansible-integration (gives you the option to implement `Automated Governance`).
 
     Those topics have already been explained in several blogs which can be found [here](https://github.com/stolostron/policy-collection/tree/main/blogs) just to summarize:
   
@@ -385,7 +386,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
     - you can invoke Ansible-Jobs from Policies so you could only invoke Ansible from critical policies
     - you could use the previously discussed `evaluationInterval` to trigger an Ansible Job at a regular basis.
    
-13. Policies can be used to check for `expired` Certificates in different namespaces.
+13. Policies can be used to check for `expired` Certificates in different namespaces
     Please review the following example where a violation will be created if a certificate is valid for less than 100 hours:  
 
    ```
