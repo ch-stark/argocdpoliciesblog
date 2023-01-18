@@ -200,9 +200,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    `ConfigMap` into several namespace or only into the namespaces with a certain name or label.
 
 
-4.  You have the capability to merge or patch resources. This means if a Kubernetes-Object `must` contain certain values you
+4.  You have the capability to merge or patch resources. This means if a Kubernetes-Object has to contain certain values you
     specify `musthave` in case you can tolerate other fields.
-    Else - if the object must match exactly - you must specify `mustonlyhave`.
+    Else - if the object must match exactly - you have to specify `mustonlyhave`.
 
     A often requested example for `mustonlyhave` is to disable the `self-provisioner role` from an existing or newly created
     OpenShift-Cluster:
