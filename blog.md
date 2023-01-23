@@ -306,7 +306,10 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    The feature has mainly the advantage to tune environments with many policies to consume less resources.
 
 9. You can use `PolicyGenerator` which also can be used for integration of `Kyverno` and `Gatekeeper`. 
-
+   The PolicyGenerator is a Kustomize plugin to wrap Kubernetes manifests in Policies and also generate PolicySets. Generation    can be done locally or through GitOps. We restrict generation sources to local subdirectories for security but starting with 
+   RHACM 2.7 the path can point to a Kustomize directory, which allows additional levels of customization as well as supplying 
+   a remote URL in the Kustomize file.
+ 
   `PolicyGenerator` can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via  
    Custom Tooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
 
