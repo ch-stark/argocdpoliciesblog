@@ -416,9 +416,12 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    ### Running the example
    
-   Starting with ACM 2.7 the best way to setup the example and to provide a nice onboarding experience to to apply three  
+   Starting with ACM 2.7 the best way to setup the example and to provide a nice onboarding experience to to apply those  
    policies using the new dependency feature:
 
+
+   This policy configures ArgoCD with PolicyGenerator and it requires GitopsOperator to be installed.
+   
    ```
       apiVersion: policy.open-cluster-management.io/v1
       kind: Policy
@@ -566,7 +569,11 @@ In the following we will list the advantages of deploying RHACM-Policies using A
           matchExpressions:
             - {key: name, operator: In, values: ["local-cluster"]}
       apiVersion: policy.open-cluster-management.io/v1
-      
+    
+    ```
+    This Policy installs an Application, in the following Gatekeeper will be installed
+    
+    ```
       
       ---
       kind: Policy
