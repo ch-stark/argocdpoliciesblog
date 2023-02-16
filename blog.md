@@ -1,7 +1,10 @@
 ## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
 
 In this blog, we are going to explore the relationship between OpenShift GitOps (Argo CD) and Red Hat Advanced Cluster Management's (RHACM's) policy framework and how they fit together.
-While RHACM is Red Hat’s solution for Kubernetes `MultiClusterManagement` with a strong focus on Governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just reached CNCF's [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status. 
+While RHACM is Red Hat’s solution for Kubernetes `MultiClusterManagement` with a strong focus on Governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just reached CNCF's [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status.
+
+This blog is not covering a general introduction to policies, for this it is highly recommended to check the [list](https://github.com/open-cluster-management-io/policy-collection/tree/main/blogs) of existing blogs on all details of RHACM's-Governance Framework.  
+
 In the following we will list the advantages of deploying RHACM-Policies using Argo CD showing concrete examples.
 
 
@@ -420,69 +423,6 @@ In the following we will list the advantages of deploying RHACM-Policies using A
       apiVersion: policy.open-cluster-management.io/v1
       kind: Policy
       metadata:
-        name: openshift-gitops-installed
-        annotations:
-          policy.open-cluster-management.io/standards: NIST SP 800-53
-          policy.open-cluster-management.io/categories: CM Configuration Management
-          policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
-      spec:
-        remediationAction: enforce
-        disabled: false
-        policy-templates:
-          - objectDefinition:
-              apiVersion: policy.open-cluster-management.io/v1
-              kind: ConfigurationPolicy
-              metadata:
-                name: openshift-gitops-installed
-              spec:
-                remediationAction: enforce
-                severity: medium
-                object-templates:
-                  - complianceType: musthave
-                    objectDefinition:
-                      # This is an auto-generated file. DO NOT EDIT
-                      apiVersion: operators.coreos.com/v1alpha1
-                      kind: Subscription
-                      metadata:
-                        name: openshift-gitops-operator
-                        namespace: openshift-operators
-                        labels:
-                          operators.coreos.com/openshift-gitops-operator.openshift-operators: ''
-                      spec:
-                        channel: stable
-                        installPlanApproval: Automatic
-                        name: openshift-gitops-operator
-                        source: redhat-operators
-                        sourceNamespace: openshift-marketplace
-      ---
-      apiVersion: policy.open-cluster-management.io/v1
-      kind: PlacementBinding
-      metadata:
-        name: binding-argo-development
-      placementRef:
-        name: all-openshift
-        kind: PlacementRule
-        apiGroup: apps.open-cluster-management.io
-      subjects:
-        - name: openshift-gitops-installed
-          kind: Policy
-          apiGroup: policy.open-cluster-management.io
-      ---
-      ---
-      apiVersion: apps.open-cluster-management.io/v1
-      kind: PlacementRule
-      metadata:
-        name: all-openshift
-      spec:
-        clusterConditions:
-        - status: "True"
-          type: ManagedClusterConditionAvailable
-        clusterSelector:
-          matchExpressions:
-            - {key: environment, operator: In, values: ["dev"]}`
-      apiVersion: policy.open-cluster-management.io/v1
-      kind: Policy
-      metadata:
         name: openshift-gitops-policygenerator
         annotations:
           policy.open-cluster-management.io/standards: NIST SP 800-53
@@ -626,6 +566,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
           matchExpressions:
             - {key: name, operator: In, values: ["local-cluster"]}
       apiVersion: policy.open-cluster-management.io/v1
+      
+      
+      ---
       kind: Policy
       metadata:
         name: policy-gatekeeper-application
@@ -739,5 +682,5 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    This overview had the purpose to explain why it is a good idea to use Policies together with `GitOpsOperator/ArgoCD`. Both      approaches can heavily benefit from each other. Certainly it needs to be highlighted that the focus of RHACM-Policies is to 
    support customers becoming `compliant` from a technical point of view. It can be even seen as a `ArgoCD extension to
    Governance`. You get all the great benefits highlighted above out of the box.
-   Both `sites` will provide further features in the future like enhanced `Operator` or `Dependency` Management and we think of
+   Both `sites` will provide further features in the future like enhanced `Operator` Management and we think of
    further integration possibilities. We would love to get your feedback and thoughts on this topic.
