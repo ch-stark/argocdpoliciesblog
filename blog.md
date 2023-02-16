@@ -570,10 +570,12 @@ In the following we will list the advantages of deploying RHACM-Policies using A
             - {key: name, operator: In, values: ["local-cluster"]}
       apiVersion: policy.open-cluster-management.io/v1
     
-    ```
-    This Policy installs an Application, in the following Gatekeeper will be installed
+   ```
+   
+   This Policy installs an Application, in the following Gatekeeper will be installed
     
-    ```
+   
+   ```
       
       ---
       kind: Policy
