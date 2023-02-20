@@ -287,7 +287,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    For quickly installing the below policies just execute:
    
    ```
-   oc apply -f https://github.com/ch-stark/argocdpoliciesblog/tree/main/setuppolicies/policies
+   oc apply -f https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/policies/openshift-gitops-installed.yaml
+   oc apply -f https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/policies/openshift-gitops-policygenerator.yaml
+   oc apply -f https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/policies/policy-application-gatekeeper.yaml
    ```
 
    This policy configures ArgoCD with PolicyGenerator and it requires GitopsOperator to be installed.
