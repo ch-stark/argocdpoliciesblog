@@ -1,0 +1,67 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-gatekeeper-application
+  annotations:
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+spec:
+  disabled: false
+  dependencies:
+  - apiVersion: policy.open-cluster-management.io/v1
+    compliance: Compliant
+    kind: Policy
+    name: openshift-gitops-policygenerator
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-application-gatekeeper
+        spec:
+          remediationAction: inform
+          severity: low
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: argoproj.io/v1alpha1
+                kind: Application
+                metadata:
+                  name: policiesgatekeeper
+                  namespace: openshift-gitops
+                spec:
+                  destination:
+                    namespace: openshift-gitops
+                    server: https://kubernetes.default.svc
+                  project: default
+                  source:
+                    path: .
+                    repoURL: https://github.com/ch-stark/gatekeeper-examples
+                    targetRevision: HEAD
+                  syncPolicy:
+                    syncOptions:
+                      - CreateNamespace=true
+                    automated:
+                      selfHeal: false
+                      prune: true
+          pruneObjectBehavior: DeleteIfCreated
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: gatekeeper-application-placement
+  namespace: default
+placementRef:
+  name: placement-openshift-gitops-policygenerator
+  apiGroup: apps.open-cluster-management.io
+  kind: PlacementRule
+subjects:
+  - name: gatekeeper-application
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
