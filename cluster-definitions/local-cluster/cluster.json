@@ -1,0 +1,23 @@
+{
+  "name": "davidsmiDAP8",
+  "vmSize": "Standard_D2_v2",
+  "maxTasksPerNode": 8,
+  "poolSize": {
+    "dedicatedNodes": {
+      "min": 8,
+      "max": 8
+    },
+    "lowPriorityNodes": {
+      "min": 0,
+      "max": 0
+    },
+    "autoscaleFormula": "QUEUE"
+  },
+  "containerImage": "rocker/tidyverse:latest",
+  "rPackages": {
+    "cran": [],
+    "github": [],
+    "bioconductor": []
+  },
+  "commandLine": []
+}
