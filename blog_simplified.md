@@ -165,14 +165,14 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    ![Check Terminating](images/policy-terminating.png)
 
-6. Similar to above we provide the option to `delete` certain objects, you would just set the `remediationAction` to `enforce`.
+6. Similar to above - where we use `mustnothave` we provide the option to `delete` certain objects, you would just set the `remediationAction` to `enforce`.
 
    Please check here for more [examples](https://github.com/stolostron/governance-policy-framework/blob/main/doc/configuration-policy/README.md#basic-usage) regarding the previous points.
 
    Please note that one of the most interesting usecases here is to delete the `kubeadmin-secret` from the managed-clusters.
   
    The capability to delete objects is enhanced by specifying a `prune-object-behavior` so you can decide what should happen
-   with the objects once you delete a Policy. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies). 
+   with the objects once you delete the Policy itself. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies). 
 
 7. RHACM's Governance framework provides the option to group objects to certain sets (`PolicySets`), a feature which has both
    UI and Gitops-Support.
