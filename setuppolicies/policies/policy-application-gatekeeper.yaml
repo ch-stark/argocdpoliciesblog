@@ -9,10 +9,10 @@ metadata:
 spec:
   disabled: false
   dependencies:
-  - apiVersion: policy.open-cluster-management.io/v1
-    compliance: Compliant
-    kind: Policy
-    name: openshift-gitops-policygenerator
+    - name: openshift-gitops-policygenerator
+      apiVersion: policy.open-cluster-management.io/v1
+      compliance: Compliant
+      kind: Policy
   policy-templates:
     - objectDefinition:
         apiVersion: policy.open-cluster-management.io/v1
@@ -55,13 +55,12 @@ spec:
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: gatekeeper-application-placement
-  namespace: default
+  name: policy-gatekeeper-application-placement
 placementRef:
   name: placement-openshift-gitops-policygenerator
   apiGroup: apps.open-cluster-management.io
   kind: PlacementRule
 subjects:
-  - name: gatekeeper-application
+  - name: policy-gatekeeper-application
     apiGroup: policy.open-cluster-management.io
     kind: Policy
