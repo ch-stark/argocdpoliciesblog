@@ -419,6 +419,11 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    Starting with ACM 2.7 the best way to setup the example and to provide a nice onboarding experience to to apply those  
    policies using the new dependency feature:
 
+   For quickly installing the below policies just execute:
+   
+   ```
+   oc apply -f https://github.com/ch-stark/argocdpoliciesblog/tree/main/setuppolicies/policies
+   ```
 
    This policy configures ArgoCD with PolicyGenerator and it requires GitopsOperator to be installed.
    
