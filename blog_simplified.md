@@ -47,41 +47,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
   `centralized` or `decentralized` approach. This means you can consistently rollout 
    the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are later difficult to troubleshoot.
    
-   This will be achieved by the following objects. Especially by configuring the `Placement-Object` you can decide on which 
-   `Clusters` the Policies should be applied.
    
-   ```
-      apiVersion: policy.open-cluster-management.io/v1
-      kind: PlacementBinding
-      metadata:
-        name: example-binding
-      placementRef:
-        apiGroup: cluster.open-cluster-management.io
-        kind: Placement
-        name: example-placement
-      subjects:
-      - apiGroup: policy.open-cluster-management.io
-        kind: Policy
-        name: example-policy
-      ---
-      apiVersion: cluster.open-cluster-management.io/v1beta1
-      kind: Placement
-      metadata:
-        name: example-placement
-      spec:
-        predicates:
-        - requiredClusterSelector:
-          labelSelector:
-            matchExpressions: []
-      ---
-      # this object is generated after the evaluation of the rules
-      apiVersion: cluster.open-cluster-management.io/v1beta1
-      kind: PlacementDecision
-      metadata:
-        name: example-policy-plr-1
-        labels:
-          cluster.open-cluster-management.io/placement: destinationcluster
-   ```    
 
 2. You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where 
    you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
@@ -316,31 +282,6 @@ In the following we will list the advantages of deploying RHACM-Policies using A
   `PolicyGenerator` can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via  
    Custom Tooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
 
-   Let's take the following example. You want to deploy the following resources together:
-  
-   - `Deployment`: define which image to run.
-   - `Service`: component can be reached over the network.
-   - `Ingress`: the outside world can access our Service.
-   - `ConfigMap`: configure the component (often makes sense to make this templatized).
-   - `Secret`: supply credentials to the component (often makes sense to make this templatized).
-   - `NetworkPolicy`: restrict the component's attack surface.
-
-   So you could place all `yaml-files` into a folder, together with the `checks` like `deployment must be running` and you can
-   create a single Policy by just configure:
-
-   ```
-      policies:
-      # Deployment-Policy - start
-      - name: policy-deployment
-        categories:
-          - System-Configuration
-        controls: 
-          - ApplicationDeployment
-        manifests:
-          - path: input/
-   ```
-
-   In the above all yaml-files would be used to generate a single Policy. 
    Please note that you can also generate Policies from folders which contain a `Kustomization`.
    Let's check the following example-extract:
 
@@ -356,7 +297,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
       apiVersion: kustomize.config.k8s.io/v1beta1
       kind: Kustomization
       resources:
-        - https://github.com/open-policy-agent/gatekeeper-library/library     
+        - https://github.com/ch-stark/gatekeeper-library/library     
      
    ```
 
@@ -392,28 +333,6 @@ In the following we will list the advantages of deploying RHACM-Policies using A
     - you can invoke Ansible-Jobs from Policies so you could only invoke Ansible from critical policies
     - you could use the previously discussed `evaluationInterval` to trigger an Ansible Job at a regular basis.
    
-13. Policies can be used to check for `expired` Certificates in different namespaces
-    Please review the following example where a violation will be created if a certificate is valid for less than 100 hours:  
-
-   ```
-      apiVersion: policy.open-cluster-management.io/v1
-      kind: CertificatePolicy
-      metadata:
-        name: certificate-policy-1
-        namespace: kube-system
-        label:
-          category: "System-Integrity"
-      spec:
-      # include are the namespaces you want to watch certificate policies in, while exclude are the namespaces you explicitly do not want to watch
-       namespaceSelector:
-         include: ["default", "kube-*"]
-         exclude: ["kube-system"]
-     # Can be enforce or inform, however enforce doesn't do anything with regards to this controller
-       remediationAction: inform
-     # minimum duration is the least amount of time the certificate is still valid before it is considered non-compliant
-       minimumDuration: 100h
-   ```
-
    ### Running the example
    
    Starting with ACM 2.7 the best way to setup the example and to provide a nice onboarding experience to to apply those  
