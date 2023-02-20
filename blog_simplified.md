@@ -284,7 +284,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    Starting with ACM 2.7 the best way to setup the example and to provide a nice onboarding experience to to apply those  
    policies using the new dependency feature:
 
-   For quickly installing the below policies just execute:
+   For quickly installing the below policies just execute those three policies.
+   First is to install OpenShift-Gitops, second is to configure the ArgoCD-Instance and the third is to apply policies.
+   Note that Policies and PolicyGenerator should be only applied on the Hub-Cluster.
    
    ```
    oc apply -f https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/policies/openshift-gitops-installed.yaml
