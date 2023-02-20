@@ -5,7 +5,7 @@ While RHACM is Red Hat’s solution for Kubernetes `MultiClusterManagement` with
 
 This blog is not covering a general introduction to policies, for this it is highly recommended to check the [list](https://github.com/open-cluster-management-io/policy-collection/tree/main/blogs) of existing blogs on all details of RHACM's-Governance Framework.  
 
-In the following we will list the advantages of deploying RHACM-Policies using Argo CD showing concrete examples.
+In the following we will list the advantages of deploying RHACM-Policies using Argo CD showing several `real-world` examples.
 
 
 ## Advantages of using Policies with ArgoCD
@@ -45,7 +45,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ```
    It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/ArgoCD` regardless if you have a  
   `centralized` or `decentralized` approach. This means you can consistently rollout 
-   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are later difficult to troubleshoot.
+   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are else difficult to troubleshoot.
    
    
 
@@ -96,60 +96,6 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    
    `Benefits` of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you     customize specific elements of a policy over various clusters within the fleet.
 
-    See here a `real world` example how to create an ApplicationSet using a `TemplatizedPolicies` approach:
-
-   ```
-      apiVersion: policy.open-cluster-management.io/v1
-      kind: Policy
-      metadata:
-        name: policy-as-bootstrap-gitops
-        annotations:
-          policy.open-cluster-management.io/standards: NIST SP 800-53
-          policy.open-cluster-management.io/categories: CM Configuration Management
-          policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
-      spec:
-        remediationAction: enforce
-        disabled: false
-        policy-templates:
-          - objectDefinition:
-              apiVersion: policy.open-cluster-management.io/v1
-              kind: ConfigurationPolicy
-              metadata:
-                name: gitops-argocd-applicationset
-              spec:
-                remediationAction: inform  # will be overridden by remediationAction in parent policy
-                severity: high
-                object-templates:
-                  - complianceType: mustonlyhave
-                    objectDefinition:
-                      apiVersion: argoproj.io/v1alpha1
-                      kind: ApplicationSet
-                      metadata:
-                        name: as-bootstrap-acm
-                        namespace: openshift-gitops
-                      spec:
-                        generators:
-                        - git:
-                            repoURL: https://gitlab.example.com/openshift/argocd-cluster-config.git
-                            revision: main
-                            files:
-                            - path: 'cluster-definitions/{{ fromClusterClaim "name" }}/cluster.json'
-                        template:
-                          metadata:
-                            name: 'ocp-{{ fromClusterClaim "name" }}-bootstrap-acm'
-                          spec:
-                            project: default
-                            source:
-                              repoURL: https://gitlab.example.com/openshift/argocd-cluster-config.git
-                              targetRevision: main
-                              path: "cluster-config/overlays/{{`{{cluster.name}}`}}"
-                            destination:
-                              server: https://kubernetes.default.svc
-                            syncPolicy:
-                              automated:
-                                prune: true
-                                selfHeal: true
-    ```
 
 3.  RHACM Policy framework provides the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces
     based on namespace `names`, `labels` or `expressions`.
