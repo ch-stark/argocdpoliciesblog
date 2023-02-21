@@ -173,7 +173,10 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    Please note that one widely used usecases is to delete the `kubeadmin-secret` from the managed-clusters.
    The capability to delete objects is enhanced by specifying a `prune-object-behavior` so you can decide what should happen
-   with the objects once you delete the Policy itself. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies). 
+   with the objects once you delete the Policy itself. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies) the three options:
+   * DeleteIfCreated: Cleans up any resources created by the policy.
+   * DeleteAll: Cleans up all resources managed by the policy.
+   * None: This is the default value and maintains the same behavior from previous releases, where no related resources are deleted.
 
 7. RHACM's Governance framework provides the option to group objects to certain sets (`PolicySets`), a feature which has both
    UI and Gitops-Support.
