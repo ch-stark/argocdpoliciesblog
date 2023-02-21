@@ -1,4 +1,4 @@
-## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
+## Argo CD and Red Hat Advanced Cluster Management-Policies: Better together
 
 In this blog, we are going to explore the relationship between OpenShift GitOps (Argo CD) and Red Hat Advanced Cluster Management's (RHACM's) policy framework and how they fit together.
 While RHACM is Red Hat’s solution for Kubernetes `Multi-Cluster Management` with a strong focus on Governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just reached CNCF's [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status.
@@ -8,7 +8,7 @@ This blog is not covering a general introduction to policies, for this it is hig
 In the following we will list the advantages of deploying RHACM-Policies using Argo CD showing several `real-world` examples.
 
 
-## Advantages of using Policies with ArgoCD
+## Advantages of using Policies with Argo CD
 
 1. RHACM-Policies can be used to install and configure Argo CD consistently either on the Managing or on Managed-Clusters. See    an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
    The Policy is marked as part of the Baseline-Configuration of the "NIST SP 800-53" standard. Equivalents exist in other 
@@ -45,7 +45,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
         sso:
           provider: keycloak
    ```
-   It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/ArgoCD` regardless if you have a  
+   It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/Argo CD` regardless if you have a  
   `centralized` or `decentralized` approach. Enforce means in this context that you can consistently rollout 
    the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are else difficult to troubleshoot. `Monitor` or using 'Inform' means that the Cluster are really configured as 
    specified and that this can be controlled/verified anytime. 
