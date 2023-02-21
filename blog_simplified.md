@@ -171,8 +171,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    Please check here for more [examples](https://github.com/stolostron/governance-policy-framework/blob/main/doc/configuration-policy/README.md#basic-usage) regarding the previous points.
 
-   Please note that one of the most interesting usecases here is to delete the `kubeadmin-secret` from the managed-clusters.
-  
+   Please note that one widely used usecases is to delete the `kubeadmin-secret` from the managed-clusters.
    The capability to delete objects is enhanced by specifying a `prune-object-behavior` so you can decide what should happen
    with the objects once you delete the Policy itself. Please review here [Prune Object Behavior](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/governance/governance#cleaning-up-resources-from-policies). 
 
