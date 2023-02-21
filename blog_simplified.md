@@ -308,10 +308,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
       kind: Policy
       metadata:
         name: openshift-gitops-policygenerator
-        annotations:
-          policy.open-cluster-management.io/standards: NIST SP 800-53
-          policy.open-cluster-management.io/categories: CM Configuration Management
-          policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+             
       spec:
         remediationAction: inform
         disabled: false
@@ -366,53 +363,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
                           - emptyDir: {}
                             name: policy-generator
                         kustomizeBuildOptions: --enable-alpha-plugins
-                  - complianceType: musthave
-                    objectDefinition:
-                      kind: ClusterRole
-                      apiVersion: rbac.authorization.k8s.io/v1
-                      metadata:
-                        name: openshift-gitops-policy-admin
-                      rules:
-                        - verbs:
-                            - get
-                            - list
-                            - watch
-                            - create
-                            - update
-                            - patch
-                            - delete
-                          apiGroups:
-                            - policy.open-cluster-management.io
-                          resources:
-                            - policies
-                            - placementbindings
-                        - verbs:
-                            - get
-                            - list
-                            - watch
-                            - create
-                            - update
-                            - patch
-                            - delete
-                          apiGroups:
-                            - apps.open-cluster-management.io
-                          resources:
-                            - placementrules
-                        - verbs:
-                            - get
-                            - list
-                            - watch
-                            - create
-                            - update
-                            - patch
-                            - delete
-                          apiGroups:
-                            - cluster.open-cluster-management.io
-                          resources:
-                            - placements
-                            - placements/status
-                            - placementdecisions
-                            - placementdecisions/status
+                 
                   - complianceType: musthave
                     objectDefinition:
                       kind: ClusterRoleBinding
@@ -427,37 +378,12 @@ In the following we will list the advantages of deploying RHACM-Policies using A
                         apiGroup: rbac.authorization.k8s.io
                         kind: ClusterRole
                         name: openshift-gitops-policy-admin
-      ---
-      apiVersion: policy.open-cluster-management.io/v1
-      kind: PlacementBinding
-      metadata:
-        name: binding-openshift-gitops-policygenerator
-      placementRef:
-        name: placement-openshift-gitops-policygenerator
-        kind: PlacementRule
-        apiGroup: apps.open-cluster-management.io
-      subjects:
-        - name: openshift-gitops-policygenerator
-          kind: Policy
-          apiGroup: policy.open-cluster-management.io
-      ---
-      apiVersion: apps.open-cluster-management.io/v1
-      kind: PlacementRule
-      metadata:
-        name: placement-openshift-gitops-policygenerator
-      spec:
-        clusterSelector:
-          matchExpressions:
-            - {key: name, operator: In, values: ["local-cluster"]}
-      apiVersion: policy.open-cluster-management.io/v1
-    
+          
    ```
    
    This Policy installs an Application, in the following Gatekeeper will be installed
     
-   
    ```
-      
       ---
       kind: Policy
       metadata:
@@ -480,53 +406,6 @@ In the following we will list the advantages of deploying RHACM-Policies using A
               kind: ConfigurationPolicy
               metadata:
                 name: policy-application-gatekeeper
-              spec:
-                remediationAction: inform
-                severity: low
-                namespaceSelector:
-                  exclude:
-                    - kube-*
-                  include:
-                    - default
-                object-templates:
-                  - complianceType: musthave
-                    objectDefinition:
-                      apiVersion: argoproj.io/v1alpha1
-                      kind: Application
-                      metadata:
-                        name: policiesgatekeeper
-                        namespace: openshift-gitops
-                      spec:
-                        destination:
-                          namespace: openshift-gitops
-                          server: https://kubernetes.default.svc
-                        project: default
-                        source:
-                          path: .
-                          repoURL: https://github.com/ch-stark/gatekeeper-examples
-                          targetRevision: HEAD
-                        syncPolicy:
-                          syncOptions:
-                            - CreateNamespace=true
-                          automated:
-                            selfHeal: false
-                            prune: true
-                pruneObjectBehavior: DeleteIfCreated
-      ---
-      apiVersion: policy.open-cluster-management.io/v1
-      kind: PlacementBinding
-      metadata:
-        name: gatekeeper-application-placement
-        namespace: default
-      placementRef:
-        name: placement-openshift-gitops-policygenerator
-        apiGroup: apps.open-cluster-management.io
-        kind: PlacementRule
-      subjects:
-        - name: gatekeeper-application
-          apiGroup: policy.open-cluster-management.io
-          kind: Policy
-   
    ```
 
    See some of the Policies being synced onto the Hub-Cluster using ArgoCD-Applications in the `Governance-View`.
