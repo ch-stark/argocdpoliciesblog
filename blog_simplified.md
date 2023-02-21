@@ -1,7 +1,7 @@
 ## ArgoCD and Red Hat Advanced Cluster Management-Policies: Better together
 
 In this blog, we are going to explore the relationship between OpenShift GitOps (Argo CD) and Red Hat Advanced Cluster Management's (RHACM's) policy framework and how they fit together.
-While RHACM is Red Hat’s solution for Kubernetes `MultiClusterManagement` with a strong focus on Governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just reached CNCF's [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status.
+While RHACM is Red Hat’s solution for Kubernetes `Multi-Cluster Management` with a strong focus on Governance, OpenShift GitOps (Argo CD) is a very popular Gitops-Engine which is used by many customers and which just reached CNCF's [graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/ ) status.
 
 This blog is not covering a general introduction to policies, for this it is highly recommended to check the [list](https://github.com/open-cluster-management-io/policy-collection/tree/main/blogs) of existing blogs on all details of RHACM's-Governance Framework.  
 
