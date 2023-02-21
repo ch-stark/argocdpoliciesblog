@@ -46,8 +46,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
           provider: keycloak
    ```
    It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/ArgoCD` regardless if you have a  
-  `centralized` or `decentralized` approach. This means you can consistently rollout 
-   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are else difficult to troubleshoot.
+  `centralized` or `decentralized` approach. Enforce means in this context that you can consistently rollout 
+   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are else difficult to troubleshoot. `Monitor` or using 'Inform' means that the Cluster are really configured as 
+   specified and that this can be controlled/verified anytime. 
    
    
 
