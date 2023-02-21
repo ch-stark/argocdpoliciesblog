@@ -67,7 +67,8 @@ In the following we will list the advantages of deploying RHACM-Policies using A
           namespace: target
    ```
 
-   The following example shows you how to dynamically configure a `LimitRange` and a `ResourceQuota`:
+   The following example shows you how to dynamically configure a `LimitRange` and a `ResourceQuota` from values
+   coming from a Config-Map which is stored on the Hub-Cluster:
 
    ```
       apiVersion: v1
@@ -97,7 +98,8 @@ In the following we will list the advantages of deploying RHACM-Policies using A
           requests.nvidia.com/gpu: 4
    ```
    
-   `Benefits` of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you     customize specific elements of a policy over various clusters within the fleet.
+   `Benefits` of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you     customize specific elements of a policy over various clusters within the fleet. 
+    You find [here](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.7/html/governance/governance?extIdCarryOver=true&sc_cid=7013a00000387pqAAA#support-templates-in-config-policies) a list of all configuration-options.
 
 
 3.  RHACM Policy framework provides the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces
