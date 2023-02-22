@@ -450,7 +450,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
 ### Summary
 
-   This overview had the purpose to explain why it is a good idea to use Policies together with `GitOpsOperator/ArgoCD`. Both      approaches can heavily benefit from each other. Certainly it needs to be highlighted that the focus of RHACM-Policies is to 
+   This overview had the purpose to explain why it is a good idea to use Policies together with `GitOpsOperator/ArgoCD`. Both      tools can heavily benefit from each other. Certainly it needs to be highlighted that the focus of RHACM-Policies is to 
    support customers becoming `compliant` from a technical point of view. It can be even seen as a `ArgoCD extension to
    Governance`. You get all the great benefits highlighted above out of the box.
    Both `sites` will provide further features in the future like enhanced `Operator` Management and we think of
