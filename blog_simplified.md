@@ -45,12 +45,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
         sso:
           provider: keycloak
    ```
-   It offers you the option to `enforce` and `monitor` the settings of `Gitops-Operator/Argo CD` regardless if you have a  
+   It offers you the option to `enforce` the settings of `Gitops-Operator/Argo CD` regardless if you have a  
   `centralized` or `decentralized` approach. Enforce means in this context that you can consistently rollout 
-   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are else difficult to troubleshoot. `Monitor` or using 'Inform' means that the Cluster are really configured as 
-   specified and that this can be controlled/verified anytime. 
-   
-   
+   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are else difficult to troubleshoot.       
 
 2. You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where 
    you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
@@ -227,7 +224,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    The above example stops evaluating the policy once it is in compliant state. So it enforces it only once.
    The feature has mainly the advantage to tune environments with many policies to consume less resources.
 
-9. You can use PolicyGenerator for the integration of Admission-Controllers like `Kyverno` and `Gatekeeper`. 
+9. You can use PolicyGenerator for the integration of `Admission-Controllers` like `Kyverno` and `Gatekeeper`. 
    The PolicyGenerator is a Kustomize plugin that can be used to wrap Kubernetes manifests in Policies and also to generate  
    PolicySets. Generation can be done locally or through GitOps. We restrict generation sources to local subdirectories for
    security but starting with RHACM 2.7 the path can point to a Kustomize directory, which allows additional levels of  
@@ -257,7 +254,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    ### Migrate from PlacementRules to Placement using PolicyGenerator
       
-   Another nice feature of `PolicyGenerator` is that it helps you to upgrade from `PlacementRules` to the new `Placement-API`.
+   Another nice feature of `PolicyGenerator` is that it helps you to upgrade from `PlacementRules` to the new [`Placement-API`] (https://open-cluster-management.io/concepts/placement/) to benefit from all the great features.
    You see in above file that there is both the option to set a `PlacementRule` or a `Placement`. You can either specify a name
    (when the object already exists in the Cluster) or a path in the Gitrepo to apply the objects. See:  
    `placementPath`,`placementName` or `placementRulePath` and `placementRuleName` in the reference file [here](https://github.com/stolostron/policy-generator-plugin/blob/main/docs/policygenerator-reference.yaml).
@@ -298,7 +295,9 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    
    ```
    oc apply -f https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/policies/openshift-gitops-installed.yaml
+   #should be only applied on the Hub
    oc apply -f https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/policies/openshift-gitops-policygenerator.yaml
+   #should be only applied on the Hub
    oc apply -f https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/policies/policy-application-gatekeeper.yaml
    ```
 
@@ -399,14 +398,11 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ![Governance-View](images/policies_from_argo.png)
 
 ## Fixing the issues that ArgoCD gets out of sync and monitoring the solution
-   "A nice example how ArgoCD can be configured to optimize the interaction with RHACM-policies has been the following" -> "The    following present a nice example of how Argo CD can be configured to optimize the interaction with RHACM-policies"
-   use present tense in the following sentences.
-   "It turned out that as the RHACM-Policy-Controller is copying Policies into a namespace (representing a managed cluster)    
-   therefore ArgoCD-Applications became out-of-sync" -> "As RHACM-Policy-Controller copies Policies into a namespace  
-   (representing a managed cluster) the Argo CD-Applications become out-of-sync".
+   The following present a nice example of how Argo CD can be configured to optimize the interaction with RHACM-policies:
+   As RHACM-Policy-Controller copies Policies into a namespace (representing a managed cluster) the Argo CD-Applications become    out-of-sync.
    This can be fixed by setting the `resource tracking` method to
    [label](https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method) which is 
-   already included in the examples.
+   already included in the examples and we plan further improvements to address that.
 
    For monitoring you can benefit from RHACM's `Gatekeeper Integration` by using this `Gatekeeper-Constraint` together with 
    PolicyGenerator.
