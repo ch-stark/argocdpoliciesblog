@@ -227,10 +227,11 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    The above example stops evaluating the policy once it is in compliant state. So it enforces it only once.
    The feature has mainly the advantage to tune environments with many policies to consume less resources.
 
-9. You can use `PolicyGenerator` which also can be used for integration of `Kyverno` and `Gatekeeper`. 
-   The PolicyGenerator is a Kustomize plugin to wrap Kubernetes manifests in Policies and also generate PolicySets. Generation    can be done locally or through GitOps. We restrict generation sources to local subdirectories for security but starting with 
-   RHACM 2.7 the path can point to a Kustomize directory, which allows additional levels of customization as well as supplying 
-   a remote URL in the Kustomize file.
+9. You can use PolicyGenerator for the integration of `Kyverno` and `Gatekeeper`. 
+   The PolicyGenerator is a Kustomize plugin that can be used to wrap Kubernetes manifests in Policies and also to generate  
+   PolicySets. Generation can be done locally or through GitOps. We restrict generation sources to local subdirectories for
+   security but starting with RHACM 2.7 the path can point to a Kustomize directory, which allows additional levels of  
+   customization as well as supplying a remote URL in the Kustomize file.
  
   `PolicyGenerator` can be used in ArgoCD to transform `yaml-resources` to Policies at Runtime. The integration works via  
    Custom Tooling as you see [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/).
@@ -293,7 +294,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    For quickly installing the below policies just execute those three policies.
    First is to install OpenShift-Gitops, second is to configure the ArgoCD-Instance and the third is to apply policies.
-   Note that Policies and PolicyGenerator should be only applied on the Hub-Cluster.
+   Note that Policies and and ArgoCD-Instance configured with PolicyGenerator should be only applied on the Hub-Cluster.
    
    ```
    oc apply -f https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/policies/openshift-gitops-installed.yaml
@@ -364,24 +365,10 @@ In the following we will list the advantages of deploying RHACM-Policies using A
                             name: policy-generator
                         kustomizeBuildOptions: --enable-alpha-plugins
                  
-                  - complianceType: musthave
-                    objectDefinition:
-                      kind: ClusterRoleBinding
-                      apiVersion: rbac.authorization.k8s.io/v1
-                      metadata:
-                        name: openshift-gitops-policy-admin
-                      subjects:
-                        - kind: ServiceAccount
-                          name: openshift-gitops-argocd-application-controller
-                          namespace: openshift-gitops
-                      roleRef:
-                        apiGroup: rbac.authorization.k8s.io
-                        kind: ClusterRole
-                        name: openshift-gitops-policy-admin
-          
+     
    ```
    
-   This Policy installs an Application, in the following Gatekeeper will be installed
+   This Policy installs an Application which provides an example to install Gatekeeper.
     
    ```
       ---
