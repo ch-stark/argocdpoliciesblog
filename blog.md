@@ -291,7 +291,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 ![OpenShift-Hardening](images/openshifthardening.png)
 
 
-8. You have the possibility to configure how often checks should be evaluated considering the current status of an evaluated  
+8. You have the possibility to configure how often checks should be performed considering the current status of an evaluated  
    Object.
 
    ```
