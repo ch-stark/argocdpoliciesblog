@@ -227,7 +227,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    The above example stops evaluating the policy once it is in compliant state. So it enforces it only once.
    The feature has mainly the advantage to tune environments with many policies to consume less resources.
 
-9. You can use PolicyGenerator for the integration of `Kyverno` and `Gatekeeper`. 
+9. You can use PolicyGenerator for the integration of Admission-Controllers like `Kyverno` and `Gatekeeper`. 
    The PolicyGenerator is a Kustomize plugin that can be used to wrap Kubernetes manifests in Policies and also to generate  
    PolicySets. Generation can be done locally or through GitOps. We restrict generation sources to local subdirectories for
    security but starting with RHACM 2.7 the path can point to a Kustomize directory, which allows additional levels of  
