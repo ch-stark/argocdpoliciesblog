@@ -412,10 +412,12 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ![Governance-View](images/policies_from_argo.png)
 
 ## Fixing the issues that ArgoCD gets out of sync and monitoring the solution
-
-   A nice example how ArgoCD can be configured to optimize the interaction with RHACM-policies has been the following. It   
-   turned out that as the RHACM-Policy-Controller is copying Policies into a namespace (representing a managed cluster)
-   therefore `ArgoCD-Applications` became `out-of-sync`. This can be fixed by setting the `resource tracking` method to
+   "A nice example how ArgoCD can be configured to optimize the interaction with RHACM-policies has been the following" -> "The    following present a nice example of how Argo CD can be configured to optimize the interaction with RHACM-policies"
+   use present tense in the following sentences.
+   "It turned out that as the RHACM-Policy-Controller is copying Policies into a namespace (representing a managed cluster)    
+   therefore ArgoCD-Applications became out-of-sync" -> "As RHACM-Policy-Controller copies Policies into a namespace  
+   (representing a managed cluster) the Argo CD-Applications become out-of-sync".
+   This can be fixed by setting the `resource tracking` method to
    [label](https://argocd-operator.readthedocs.io/en/latest/reference/argocd/#resource-tracking-method) which is 
    already included in the examples.
 
