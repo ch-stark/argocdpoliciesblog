@@ -59,7 +59,7 @@ spec:
                     volumes:
                     - emptyDir: {}
                       name: policy-generator
-                  kustomizeBuildOptions: --enable-alpha-plugins
+                  kustomizeBuildOptions: --enable-alpha-plugins --enable-helm
             - complianceType: musthave
               objectDefinition:
                 kind: ClusterRole
