@@ -308,7 +308,6 @@ In the following we will list the advantages of deploying RHACM-Policies using A
       kind: Policy
       metadata:
         name: openshift-gitops-policygenerator
-             
       spec:
         remediationAction: inform
         disabled: false
