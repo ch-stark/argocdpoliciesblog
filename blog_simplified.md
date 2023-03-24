@@ -10,7 +10,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
 ## Advantages of using Policies with Argo CD
 
-1. RHACM-Policies can be used to install and configure Argo CD consistently either on the Managing or on Managed-Clusters. See    an example [here](https://github.com/stolostron/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
+1. RHACM-Policies can be used to install and configure Argo CD consistently either on the Managing or on Managed-Clusters. See    an example [here](https://github.com/open-cluster-management-io/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
    The Policy is marked as part of the Baseline-Configuration of the "NIST SP 800-53" standard. Equivalents exist in other 
    security standard your enterprise may follow.
 
@@ -47,7 +47,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    ```
    It offers you the option to `enforce` the settings of `Gitops-Operator/Argo CD` regardless if you have a  
   `centralized` or `decentralized` approach. Enforce means in this context that you can consistently rollout 
-   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are else difficult to troubleshoot.       
+   the configuration to your fleet of clusters avoiding any issues which might come from `inconsistencies` e.g. regarding RBAC    and which are otherwise difficult to troubleshoot.       
 
 2. You get `advanced templating features` optimized for `Multi-Cluster-Management` which includes `Secrets-Management` where 
    you can securely copy a secret from the Hub to a ManagedCluster like in the example below:
@@ -95,14 +95,14 @@ In the following we will list the advantages of deploying RHACM-Policies using A
           requests.nvidia.com/gpu: 4
    ```
    
-   `Benefits` of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you     customize specific elements of a policy over various clusters within the fleet. 
+    Benefit of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you       customize specific elements of a policy over various clusters within the fleet. 
     You find [here](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.7/html/governance/governance?extIdCarryOver=true&sc_cid=7013a00000387pqAAA#support-templates-in-config-policies) a list of all configuration-options.
 
 
 3.  RHACM Policy framework provides the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces
     based on namespace `names`, `labels` or `expressions`.
 
-    In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to chose namespaces also by `label` and          `expression` which gives you more flexibility on which namespaces you like to operate on:
+    In RHACM version 2.6 - as you see below - we enhanced our `namespaceSelector` to choose namespaces also by `label` and          `expression` which gives you more flexibility on which namespaces you like to operate on:
 
     ```
        namespaceSelector:
@@ -114,7 +114,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
            values: ["test1", "test2"]
     ```
     Benefit of this feature is that it reduces significantly the Policies you need to configure, e.g. when you want to copy a
-   `ConfigMap` into several namespace or only into the namespaces with a certain name or label.
+   `ConfigMap` into several namespaces or only into the namespaces with a certain name or label.
 
 
 4.  You have the capability to merge or patch resources. This means if a Kubernetes-Object has to contain certain values you
@@ -254,7 +254,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
    ### Migrate from PlacementRules to Placement using PolicyGenerator
       
-   Another nice feature of `PolicyGenerator` is that it helps you to upgrade from `PlacementRules` to the new [`Placement-API`] (https://open-cluster-management.io/concepts/placement/) to benefit from all the great features.
+   Another nice feature of `PolicyGenerator` is that it helps you to upgrade from `PlacementRules` to the new [Placement-API](https://open-cluster-management.io/concepts/placement/) to benefit from all the great features.
    You see in above file that there is both the option to set a `PlacementRule` or a `Placement`. You can either specify a name
    (when the object already exists in the Cluster) or a path in the Gitrepo to apply the objects. See:  
    `placementPath`,`placementName` or `placementRulePath` and `placementRuleName` in the reference file [here](https://github.com/stolostron/policy-generator-plugin/blob/main/docs/policygenerator-reference.yaml).
@@ -282,7 +282,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
   
     - you can give Policies a `severity` sending alerts via `RHACM's Observability` framework only from high-prio policies
     - you can invoke Ansible-Jobs from Policies so you could only invoke Ansible from critical policies
-    - you could use the previously discussed `evaluationInterval` to trigger an Ansible Job at a regular basis.
+    - you could use the previously discussed `evaluationInterval` to trigger an Ansible Job on a regular basis.
    
    ### Running the example
    
@@ -290,14 +290,13 @@ In the following we will list the advantages of deploying RHACM-Policies using A
    policies using the new dependency feature:
 
    For quickly installing the below policies just execute those three policies.
-   First is to install OpenShift-Gitops, second is to configure the ArgoCD-Instance and the third is to apply policies.
-   Note that Policies and and ArgoCD-Instance configured with PolicyGenerator should be only applied on the Hub-Cluster.
-   
+   The first policy is to install OpenShift-Gitops, the second is to configure the ArgoCD-Instance and the third is to create an ArgoCD Application which is in charge to apply the policies.
+    
    ```
    oc apply -f https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/policies/openshift-gitops-installed.yaml
-   #should be only applied on the Hub
+   #below policy must be only applied on the Hub
    oc apply -f https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/policies/openshift-gitops-policygenerator.yaml
-   #should be only applied on the Hub
+   #below policy must be only applied on the Hub
    oc apply -f https://raw.githubusercontent.com/ch-stark/argocdpoliciesblog/main/setuppolicies/policies/policy-application-gatekeeper.yaml
    ```
 
