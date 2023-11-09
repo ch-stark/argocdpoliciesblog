@@ -10,10 +10,8 @@ In the following we will list the advantages of deploying RHACM-Policies using A
 
 ## Advantages of using Policies with Argo CD
 
-1. RHACM-Policies can be used to install and configure Argo CD consistently either on the Managing or on Managed-Clusters. See    an example [here](https://github.com/open-cluster-management-io/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
-   The Policy is marked as part of the Baseline-Configuration of the "NIST SP 800-53" standard. Equivalents exist in other 
-   security standard your enterprise may follow.
-
+1. RHACM-Policies can be used to install and configure any Kubernetes-Application like in this example Argo CD consistently either on the Managing or on Managed-Clusters. See    an example [here](https://github.com/open-cluster-management-io/policy-collection/blob/main/community/CM-Configuration-Management/policy-openshift-gitops.yaml).
+   The Policy is marked as part of the Baseline-Configuration of the "NIST SP 800-53" standard. Equivalents exist in other security standard your enterprise may follow.
 
    ```
       kind: Policy
@@ -95,7 +93,7 @@ In the following we will list the advantages of deploying RHACM-Policies using A
           requests.nvidia.com/gpu: 4
    ```
    
-    Benefit of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you       customize specific elements of a policy over various clusters within the fleet. 
+    Benefit of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you customize specific elements of a policy over various clusters within the fleet. 
     You find [here](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.7/html/governance/governance?extIdCarryOver=true&sc_cid=7013a00000387pqAAA#support-templates-in-config-policies) a list of all configuration-options.
 
 With our new `raw-object-templates` feature you can implement many usecases regarding Cluster Maintenance and Advanced-Configuration.
