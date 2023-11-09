@@ -98,6 +98,24 @@ In the following we will list the advantages of deploying RHACM-Policies using A
     Benefit of this approach are among others that there is no `duplication` of policies (and thus easier maintenance) as you       customize specific elements of a policy over various clusters within the fleet. 
     You find [here](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.7/html/governance/governance?extIdCarryOver=true&sc_cid=7013a00000387pqAAA#support-templates-in-config-policies) a list of all configuration-options.
 
+With our new `raw-object-templates` feature you can implement many usecases regarding Cluster Maintenance and Advanced-Configuration.
+In below example we check over certain labels of Managed-Clusters and set a label.
+
+```
+        object-templates-raw: |
+          {{- range (lookup "cluster.open-cluster-management.io/v1" "ManagedCluster" "" "").items }}
+          {{- if and (eq (index .metadata.labels "leaf-hub") "true") (eq (index .metadata.labels "ztp-done") "") }}
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: cluster.open-cluster-management.io/v1
+              kind: ManagedCluster
+              metadata:
+                name: {{ .metadata.name }}
+                labels:
+                  vendor: "OpenShift"
+          {{- end }}
+          {{- end }}
+```
 
 3.  RHACM Policy framework provides the option to generate resources (e.g `Roles`, `Rolebindings`) in one or several namespaces
     based on namespace `names`, `labels` or `expressions`.
