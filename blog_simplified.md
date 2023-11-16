@@ -280,11 +280,13 @@ In below example we check over certain labels of Managed-Clusters and set a labe
 
 The Governance-UI tells a clear story about governance, compliance, and adherence to corporate standards within the Kubernetes domain.
 
-    See here for an overall Governance overview in RHACM-UI:
+See here for an overall Governance overview in RHACM-UI:
+
    ![Governance](images/governance.png)
     
 
     See here example of our `build-in policy` which checks if backup is setup correctly:
+    
    ![Backup Policy](images/backuprestore.png)
 
 
