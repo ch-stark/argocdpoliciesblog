@@ -278,6 +278,8 @@ In below example we check over certain labels of Managed-Clusters and set a labe
 
 10. Governance focused UI-support (Governance-Dashboard) which enables you to drill down into errors from every single Policy.
 
+The Governance-UI tells a clear story about governance, compliance, and adherence to corporate standards within the Kubernetes domain.
+
     See here for an overall Governance overview in RHACM-UI:
    ![Governance](images/governance.png)
     
@@ -286,13 +288,13 @@ In below example we check over certain labels of Managed-Clusters and set a labe
    ![Backup Policy](images/backuprestore.png)
 
 
-11. Option to have less or more fine grained checks by using Configuration-Policies.
+12. Option to have less or more fine grained checks by using Configuration-Policies.
 
     This means you can create one `Configuration Policy` for every single Kubernetes-Object or bundle many of them. Each 
    `Configuration Policy` will be one unit when it comes to check the status in the UI as you see in the screenshot above.
     Benefit is that it gives you more flexibility when developing custom checks. 
 
-12. Monitoring- and Ansible-integration (gives you the option to implement `Automated Governance`).
+13. Monitoring- and Ansible-integration (gives you the option to implement `Automated Governance`).
 
     Those topics have already been explained in several blogs which can be found [here](https://github.com/stolostron/policy-collection/tree/main/blogs) just to summarize:
   
