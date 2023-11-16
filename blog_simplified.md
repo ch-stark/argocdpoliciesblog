@@ -285,7 +285,7 @@ See here for an overall Governance overview in RHACM-UI:
    ![Governance](images/governance.png)
     
 
-    See here example of our `build-in policy` which checks if backup is setup correctly:
+See here example of our `build-in policy` which checks if backup is setup correctly:
     
    ![Backup Policy](images/backuprestore.png)
 
