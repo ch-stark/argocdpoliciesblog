@@ -237,7 +237,8 @@ In below example we check over certain labels of Managed-Clusters and set a labe
       spec.evaluationInterval.compliant: never
    ```
 
-   The above example stops evaluating the policy once it is in compliant state. So it enforces it only once.
+When you set it to never, it'll never be evaluated again on the managed cluster unless you update the Configuration-Policy's spec.
+
    The feature has mainly the advantage to tune environments with many policies to consume less resources.
 
 9. You can use PolicyGenerator for the integration of `Admission-Controllers` like `Kyverno` and `Gatekeeper`. 
